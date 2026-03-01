@@ -7,6 +7,10 @@
       </router-link>
     </div>
 
+    <div v-if="error" class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm font-medium">
+      {{ error }}
+    </div>
+
     <!-- Filters -->
     <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
       <button
@@ -21,7 +25,11 @@
     </div>
 
     <!-- List -->
-    <div class="space-y-4">
+    <div v-if="loading" class="flex justify-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-losev-red"></div>
+    </div>
+
+    <div v-else class="space-y-4">
       <div
         v-for="activity in filteredActivities"
         :key="activity.id"
@@ -36,8 +44,8 @@
 
         <div class="flex-1 min-w-0">
           <div class="flex justify-between items-start">
-            <h3 class="font-bold text-gray-900 truncate">{{ activity.typeLabel }}</h3>
-            <span class="text-xs font-bold text-gray-400 whitespace-nowrap">{{ activity.date }}</span>
+            <h3 class="font-bold text-gray-900 truncate">{{ typeLabels[activity.type] }}</h3>
+            <span class="text-xs font-bold text-gray-400 whitespace-nowrap">{{ formatDate(activity.date) }}</span>
           </div>
           <p class="text-xs text-gray-500 mt-1 line-clamp-2">{{ activity.description }}</p>
 
@@ -55,10 +63,10 @@
             </span>
           </div>
 
-          <!-- Feedback if rejected -->
-          <div v-if="activity.status === 'REJECTED' && activity.feedback" class="mt-3 bg-red-50 p-2 rounded-xl border border-red-100">
+          <!-- Feedback if rejected or revision requested -->
+          <div v-if="(activity.status === 'REJECTED' || activity.status === 'REVISION_REQUESTED') && activity.rejectionReason" class="mt-3 bg-red-50 p-2 rounded-xl border border-red-100">
             <p class="text-[10px] text-red-700 font-medium italic leading-tight">
-              <strong>Öğretmen Notu:</strong> {{ activity.feedback }}
+              <strong>Not:</strong> {{ activity.rejectionReason }}
             </p>
           </div>
         </div>
@@ -76,7 +84,8 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { api } from '../../services/api'
 import {
   Plus,
   Clock,
@@ -93,43 +102,46 @@ const filters = [
   { id: 'REJECTED', label: 'Reddedilen' },
 ]
 
-const activeFilter = ref('ALL')
+const typeLabels = {
+  SEMINAR: 'LÖSEV Farkındalık Semineri',
+  STAND: 'LÖSEV Standı',
+  DONATION: 'Bağış Kumbarası',
+  BAZAAR: 'Kermes Etkinliği',
+  PUBLIC_AWARENESS: 'Kamuoyu Bilinçlendirme',
+  SOCIAL_MEDIA: 'Sosyal Medya Çalışması',
+  AWARENESS_EVENT: 'Farkındalık Etkinliği'
+}
 
-const activities = ref([
-  {
-    id: 1,
-    date: '24.02.2024',
-    type: 'SEMINER',
-    typeLabel: 'LÖSEV Farkındalık Semineri',
-    hours: 2,
-    description: 'Okulumuzda düzenlenen LÖSEV bilgilendirme seminerine katıldım ve arkadaşlarıma broşür dağıttım.',
-    status: 'APPROVED'
-  },
-  {
-    id: 2,
-    date: '26.02.2024',
-    type: 'STANT',
-    typeLabel: 'LÖSEV Standı',
-    hours: 4,
-    description: 'AVM içerisinde kurulan standımızda LÖSEV ürünlerinin tanıtımını gerçekleştirdim.',
-    status: 'PENDING'
-  },
-  {
-    id: 3,
-    date: '15.02.2024',
-    type: 'BAGIS',
-    typeLabel: 'Bağış Kumbarası',
-    hours: 1.5,
-    description: 'Sınıfımızdaki bağış kumbarasının yönetimini sağladım.',
-    status: 'REJECTED',
-    feedback: 'Fotoğraf veya belge yüklenmemiş. Lütfen etkinliği kanıtlayan bir görsel ekleyip tekrar gönderin.'
+const activeFilter = ref('ALL')
+const activities = ref([])
+const loading = ref(false)
+const error = ref('')
+
+const fetchActivities = async () => {
+  loading.value = true
+  error.value = ''
+  try {
+    activities.value = await api.get('/activities/my')
+  } catch (err) {
+    error.value = 'Faaliyetler yüklenirken bir hata oluştu.'
+    console.error(err)
+  } finally {
+    loading.value = false
   }
-])
+}
+
+onMounted(fetchActivities)
 
 const filteredActivities = computed(() => {
   if (activeFilter.value === 'ALL') return activities.value
   return activities.value.filter(a => a.status === activeFilter.value)
 })
+
+const formatDate = (dateStr) => {
+  if (!dateStr) return ''
+  const date = new Date(dateStr)
+  return date.toLocaleDateString('tr-TR')
+}
 
 const statusStyles = {
   PENDING: {
@@ -149,6 +161,12 @@ const statusStyles = {
     text: 'text-red-600',
     label: 'Reddedildi',
     icon: XCircle
+  },
+  REVISION_REQUESTED: {
+    bg: 'bg-orange-50',
+    text: 'text-orange-600',
+    label: 'Revizyon İstendi',
+    icon: AlertCircle
   }
 }
 </script>

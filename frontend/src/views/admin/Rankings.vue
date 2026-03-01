@@ -29,7 +29,11 @@
         </h3>
       </div>
 
-      <div class="overflow-x-auto">
+      <div v-if="loading" class="flex justify-center py-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-losev-red"></div>
+      </div>
+
+      <div v-else class="overflow-x-auto">
         <table class="w-full text-left">
           <thead class="bg-gray-50">
             <tr>
@@ -39,7 +43,7 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-50">
-            <tr v-for="(item, index) in rankings" :key="index" class="hover:bg-gray-50 transition-colors group">
+            <tr v-for="(item, index) in activeRankings" :key="index" class="hover:bg-gray-50 transition-colors group">
               <td class="px-6 py-4">
                 <div class="w-6 h-6 rounded-lg flex items-center justify-center font-black text-xs" :class="[index < 3 ? 'bg-losev-yellow/10 text-losev-yellow' : 'bg-gray-100 text-gray-400']">
                   {{ index + 1 }}
@@ -61,7 +65,8 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { api } from '../../services/api'
 import { ArrowLeft, Trophy } from 'lucide-vue-next'
 
 const tabs = [
@@ -70,24 +75,38 @@ const tabs = [
 ]
 
 const activeTab = ref('SCHOOLS')
+const loading = ref(false)
+const rawRankings = ref({
+  topStudents: [],
+  topSchools: []
+})
 
-const rankings = computed(() => {
+const fetchRankings = async () => {
+  loading.value = true
+  try {
+    rawRankings.value = await api.get('/activities/stats/rankings')
+  } catch (err) {
+    console.error('Failed to fetch rankings:', err)
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(fetchRankings)
+
+const activeRankings = computed(() => {
   if (activeTab.value === 'SCHOOLS') {
-    return [
-      { name: 'Ankara LÖSEV Koleji', sub: 'Ankara - 850 Gönüllü', hours: 24500 },
-      { name: 'İstanbul Fen Lisesi', sub: 'İstanbul - 420 Gönüllü', hours: 18200 },
-      { name: 'Bornova Anadolu Lisesi', sub: 'İzmir - 310 Gönüllü', hours: 15400 },
-      { name: 'Galatasaray Lisesi', sub: 'İstanbul - 280 Gönüllü', hours: 12100 },
-      { name: 'TED Ankara Koleji', sub: 'Ankara - 540 Gönüllü', hours: 10500 },
-    ]
+    return rawRankings.value.topSchools.map(s => ({
+      name: s.schoolName,
+      sub: `${s.city || 'Belirtilmemiş'}`,
+      hours: s.totalHours
+    }))
   } else {
-    return [
-      { name: 'Mehmet Aksoy', sub: 'Ankara LÖSEV Koleji - 10-B', hours: 124 },
-      { name: 'Zeynep Kaya', sub: 'LÖSEV Koleji - 9-A', hours: 82 },
-      { name: 'Ali Yılmaz', sub: 'LÖSEV Koleji - 11-C', hours: 56 },
-      { name: 'Selin Demir', sub: 'LÖSEV Koleji - 10-A', hours: 42 },
-      { name: 'Caner Öz', sub: 'İzmir Atatürk Lisesi - 12-F', hours: 38 },
-    ]
+    return rawRankings.value.topStudents.map(s => ({
+      name: s.fullName,
+      sub: `${s.schoolName} - ${s.grade || '-'}`,
+      hours: s.totalHours
+    }))
   }
 })
 </script>

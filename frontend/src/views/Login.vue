@@ -1,5 +1,9 @@
 <template>
   <form @submit.prevent="handleSubmit" class="space-y-6">
+    <div v-if="error" class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm font-medium">
+      {{ error }}
+    </div>
+
     <div>
       <label for="email" class="block text-sm font-medium text-gray-700">E-posta Adresi</label>
       <div class="mt-1">
@@ -72,28 +76,23 @@ const authStore = useAuthStore()
 const email = ref('')
 const password = ref('')
 const loading = ref(false)
+const error = ref('')
 
 const handleSubmit = async () => {
   loading.value = true
-  // Mock login logic
-  setTimeout(() => {
-    let role = 'STUDENT'
-    if (email.value.includes('teacher')) role = 'TEACHER'
-    if (email.value.includes('admin')) role = 'ADMIN'
+  error.value = ''
 
-    const user = {
-      id: '1',
-      firstName: email.value.split('@')[0],
-      role: role
-    }
-    authStore.setUser(user, 'mock-jwt-token')
+  try {
+    const user = await authStore.login(email.value, password.value)
 
-    if (role === 'TEACHER') router.push('/teacher/dashboard')
-    else if (role === 'ADMIN') router.push('/admin/dashboard')
+    if (user.role === 'TEACHER') router.push('/teacher/dashboard')
+    else if (user.role === 'ADMIN') router.push('/admin/dashboard')
     else router.push('/student/dashboard')
-
+  } catch (err) {
+    error.value = err.message || 'Giriş yapılamadı. Lütfen bilgilerinizi kontrol edin.'
+  } finally {
     loading.value = false
-  }, 800)
+  }
 }
 
 const fillDemo = (role) => {
