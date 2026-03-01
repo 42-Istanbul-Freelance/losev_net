@@ -66,8 +66,8 @@ export class ActivitiesController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.TEACHER, UserRole.ADMIN)
   @ApiOperation({ summary: 'Onay bekleyen faaliyetler (Öğretmen/Admin)' })
-  async getPending() {
-    return this.activitiesService.findAllPending();
+  async getPending(@Request() req) {
+    return this.activitiesService.findAllPending(req.user);
   }
 
   @Patch(':id/status')
