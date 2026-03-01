@@ -97,6 +97,6 @@ const handleSubmit = async () => {
 
 const fillDemo = (role) => {
   email.value = `${role}@losev.org.tr`
-  password.value = '123456'
+  password.value = role === 'admin' ? 'adminpassword' : '123456'
 }
 </script>
