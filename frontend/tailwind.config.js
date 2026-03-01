@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        'losev-red': '#E30613',
+        'losev-blue': '#0075af',
         'losev-yellow': '#FDC010',
       }
     },

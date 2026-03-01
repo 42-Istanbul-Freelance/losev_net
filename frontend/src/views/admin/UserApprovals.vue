@@ -7,12 +7,12 @@
       <h1 class="text-2xl font-bold text-gray-900">Kullanıcı Onayları</h1>
     </div>
 
-    <div v-if="error" class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm font-medium">
+    <div v-if="error" class="bg-blue-50 border border-blue-200 text-blue-600 px-4 py-3 rounded-xl text-sm font-medium">
       {{ error }}
     </div>
 
     <div v-if="loading" class="flex justify-center py-12">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-losev-red"></div>
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-losev-blue"></div>
     </div>
 
     <div v-else-if="pendingUsers.length > 0" class="space-y-4">
@@ -23,7 +23,7 @@
       >
         <div class="flex justify-between items-start">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-losev-red/10 text-losev-red flex items-center justify-center font-bold">
+            <div class="w-10 h-10 rounded-full bg-losev-blue/10 text-losev-blue flex items-center justify-center font-bold">
               {{ user.fullName[0] }}
             </div>
             <div>
@@ -54,7 +54,7 @@
             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Öğretmen Ata</p>
             <select
               v-model="user.selectedTeacherId"
-              class="w-full mt-1 px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-losev-red"
+              class="w-full mt-1 px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-losev-blue"
             >
               <option :value="undefined">Seçilmedi (Opsiyonel)</option>
               <option v-for="teacher in teachers" :key="teacher.id" :value="teacher.id">
@@ -77,7 +77,7 @@
           <button
             @click="handleUpdateStatus(user.id, 'REJECTED')"
             :disabled="actionLoading === user.id"
-            class="flex-1 py-3 bg-white border border-red-200 text-red-500 font-bold rounded-2xl flex items-center justify-center gap-2 active:bg-red-50 transition-all disabled:opacity-50"
+            class="flex-1 py-3 bg-white border border-blue-200 text-blue-500 font-bold rounded-2xl flex items-center justify-center gap-2 active:bg-blue-50 transition-all disabled:opacity-50"
           >
             <X class="w-5 h-5" />
             <span v-if="actionLoading === user.id">İşleniyor...</span>

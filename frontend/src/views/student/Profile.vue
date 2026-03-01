@@ -6,7 +6,7 @@
 
     <!-- User Info Card -->
     <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col items-center">
-      <div class="w-24 h-24 bg-losev-red/10 rounded-full flex items-center justify-center text-losev-red font-bold text-3xl mb-4 border-4 border-white shadow-lg ring-2 ring-losev-red/5">
+      <div class="w-24 h-24 bg-losev-blue/10 rounded-full flex items-center justify-center text-losev-blue font-bold text-3xl mb-4 border-4 border-white shadow-lg ring-2 ring-losev-blue/5">
         {{ user?.fullName?.[0] || 'İ' }}
       </div>
       <h2 class="text-xl font-bold text-gray-900">{{ user?.fullName || 'İnci Gönüllü' }}</h2>
@@ -30,7 +30,7 @@
     <div v-if="user?.role === 'STUDENT'" class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
       <div class="p-6 border-b border-gray-50">
         <h3 class="font-bold text-gray-900 flex items-center gap-2">
-          <School class="w-5 h-5 text-losev-red" />
+          <School class="w-5 h-5 text-losev-blue" />
           Okul Bilgileri
         </h3>
       </div>
@@ -50,7 +50,7 @@
     <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
       <div class="p-6 border-b border-gray-50">
         <h3 class="font-bold text-gray-900 flex items-center gap-2">
-          <Mail class="w-5 h-5 text-losev-red" />
+          <Mail class="w-5 h-5 text-losev-blue" />
           İletişim Bilgileri
         </h3>
       </div>
@@ -69,7 +69,7 @@
     <!-- Logout Button (Mobile only) -->
     <button
       @click="handleLogout"
-      class="w-full py-4 bg-white border border-gray-100 rounded-2xl flex items-center justify-center gap-2 text-losev-red font-bold active:bg-red-50 transition-colors"
+      class="w-full py-4 bg-white border border-gray-100 rounded-2xl flex items-center justify-center gap-2 text-losev-blue font-bold active:bg-blue-50 transition-colors"
     >
       <LogOut class="w-5 h-5" />
       Çıkış Yap

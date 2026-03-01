@@ -14,7 +14,7 @@
         :key="tab.id"
         @click="activeTab = tab.id"
         class="flex-1 py-2 rounded-xl text-sm font-bold transition-all"
-        :class="[activeTab === tab.id ? 'bg-white shadow text-losev-red' : 'text-gray-500']"
+        :class="[activeTab === tab.id ? 'bg-white shadow text-losev-blue' : 'text-gray-500']"
       >
         {{ tab.label }}
       </button>
@@ -30,7 +30,7 @@
       </div>
 
       <div v-if="loading" class="flex justify-center py-12">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-losev-red"></div>
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-losev-blue"></div>
       </div>
 
       <div v-else class="overflow-x-auto">
@@ -50,11 +50,11 @@
                 </div>
               </td>
               <td class="px-6 py-4">
-                <p class="font-bold text-sm text-gray-900 group-hover:text-losev-red transition-colors">{{ item.name }}</p>
+                <p class="font-bold text-sm text-gray-900 group-hover:text-losev-blue transition-colors">{{ item.name }}</p>
                 <p class="text-[10px] text-gray-400 font-medium">{{ item.sub }}</p>
               </td>
               <td class="px-6 py-4 text-right">
-                <p class="font-black text-losev-red text-sm">{{ item.hours }}s</p>
+                <p class="font-black text-losev-blue text-sm">{{ item.hours }}s</p>
               </td>
             </tr>
           </tbody>
