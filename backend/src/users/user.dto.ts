@@ -6,4 +6,8 @@ export class UpdateUserStatusDto {
   @ApiProperty({ enum: UserStatus })
   @IsEnum(UserStatus, { message: 'Geçerli bir durum seçiniz.' })
   status: UserStatus;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  teacherId?: number;
 }

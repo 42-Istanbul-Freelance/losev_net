@@ -57,6 +57,10 @@ const router = createRouter({
         {
           path: 'approvals',
           component: () => import('../views/teacher/Approvals.vue')
+        },
+        {
+          path: 'profile',
+          component: () => import('../views/student/Profile.vue')
         }
       ]
     },
@@ -72,6 +76,10 @@ const router = createRouter({
         {
           path: 'rankings',
           component: () => import('../views/admin/Rankings.vue')
+        },
+        {
+          path: 'user-approvals',
+          component: () => import('../views/admin/UserApprovals.vue')
         }
       ]
     }

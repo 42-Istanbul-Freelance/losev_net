@@ -50,6 +50,18 @@
             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Şehir / Sınıf</p>
             <p class="text-sm text-gray-700 font-semibold">{{ user.city || '-' }} / {{ user.grade || '-' }}</p>
           </div>
+          <div class="col-span-2">
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Öğretmen Ata</p>
+            <select
+              v-model="user.selectedTeacherId"
+              class="w-full mt-1 px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-losev-red"
+            >
+              <option :value="undefined">Seçilmedi (Opsiyonel)</option>
+              <option v-for="teacher in teachers" :key="teacher.id" :value="teacher.id">
+                {{ teacher.fullName }}
+              </option>
+            </select>
+          </div>
         </div>
 
         <div class="flex gap-3">
@@ -96,9 +108,18 @@ import {
 } from 'lucide-vue-next'
 
 const pendingUsers = ref([])
+const teachers = ref([])
 const loading = ref(false)
 const actionLoading = ref(null)
 const error = ref('')
+
+const fetchTeachers = async () => {
+  try {
+    teachers.value = await api.get('/users/teachers')
+  } catch (err) {
+    console.error('Failed to fetch teachers:', err)
+  }
+}
 
 const fetchPending = async () => {
   loading.value = true
@@ -113,16 +134,25 @@ const fetchPending = async () => {
   }
 }
 
-onMounted(fetchPending)
+onMounted(async () => {
+  await Promise.all([fetchPending(), fetchTeachers()])
+})
 
 const handleUpdateStatus = async (id, status) => {
   if (status === 'REJECTED' && !confirm('Bu kullanıcıyı reddetmek istediğinize emin misiniz?')) {
     return
   }
 
+  const user = pendingUsers.value.find(u => u.id === id)
+  const payload = { status }
+
+  if (status === 'APPROVED' && user.selectedTeacherId) {
+    payload.teacherId = user.selectedTeacherId
+  }
+
   actionLoading.value = id
   try {
-    await api.patch(`/users/${id}/status`, { status })
+    await api.patch(`/users/${id}/status`, payload)
     pendingUsers.value = pendingUsers.value.filter(u => u.id !== id)
   } catch (err) {
     alert('Hata: ' + (err.message || 'İşlem başarısız.'))

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Activity } from '../activities/activity.entity';
 
 export enum UserRole {
@@ -54,6 +54,15 @@ export class User {
 
   @Column({ nullable: true })
   coordinatorName: string;
+
+  @ManyToOne(() => User, (user) => user.students, { nullable: true })
+  teacher: User;
+
+  @Column({ nullable: true })
+  teacherId: number;
+
+  @OneToMany(() => User, (user) => user.teacher)
+  students: User[];
 
   @OneToMany(() => Activity, (activity) => activity.student)
   activities: Activity[];

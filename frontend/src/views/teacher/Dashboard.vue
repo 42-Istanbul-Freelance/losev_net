@@ -38,7 +38,10 @@
         </div>
         <div>
           <h2 class="text-white font-bold text-lg">Onay Bekleyenler</h2>
-          <p class="text-white/80 text-sm">Bekleyen 8 faaliyet var</p>
+          <p class="text-white/80 text-sm">
+            <span v-if="loading">Yükleniyor...</span>
+            <span v-else>Bekleyen {{ pendingCount }} faaliyet var</span>
+          </p>
         </div>
       </div>
       <ArrowRight class="w-6 h-6 text-white group-hover:translate-x-1 transition-transform" />
@@ -72,6 +75,8 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
+import { api } from '../../services/api'
 import {
   Users,
   Clock,
@@ -80,10 +85,25 @@ import {
   ArrowRight
 } from 'lucide-vue-next'
 
+const pendingCount = ref(0)
+const loading = ref(false)
+
 const activeStudents = [
   { name: 'Mehmet Aksoy', grade: '10-B', school: 'LÖSEV Koleji', hours: 124, badge: 'Altın İnci' },
   { name: 'Zeynep Kaya', grade: '9-A', school: 'LÖSEV Koleji', hours: 82, badge: 'Gümüş İnci' },
   { name: 'Ali Yılmaz', grade: '11-C', school: 'LÖSEV Koleji', hours: 56, badge: 'Gümüş İnci' },
   { name: 'Selin Demir', grade: '10-A', school: 'LÖSEV Koleji', hours: 42, badge: 'Bronz İnci' },
 ]
+
+onMounted(async () => {
+  loading.value = true
+  try {
+    const pending = await api.get('/activities/pending')
+    pendingCount.value = pending.length
+  } catch (err) {
+    console.error('Failed to fetch pending activities:', err)
+  } finally {
+    loading.value = false
+  }
+})
 </script>

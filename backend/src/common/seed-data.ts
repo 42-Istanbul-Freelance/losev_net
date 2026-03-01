@@ -41,8 +41,8 @@ export async function seedData(dataSource: DataSource) {
   await userRepository.save(teacher);
   console.log('Teacher account created: teacher@losev.org.tr / 123456');
 
-  // 3. Create Student
-  const student = userRepository.create({
+  // 3. Create Students and assign to Teacher
+  const student1 = userRepository.create({
     email: 'student@losev.org.tr',
     password: demoPassword,
     fullName: 'Ali Gönüllü',
@@ -54,12 +54,45 @@ export async function seedData(dataSource: DataSource) {
     district: 'Çankaya',
     grade: '10',
     gsm: '5551234567',
-    coordinatorName: 'Mehmet Bey',
+    coordinatorName: teacher.fullName,
+    teacherId: teacher.id,
   });
-  await userRepository.save(student);
-  console.log('Student account created: student@losev.org.tr / 123456');
+  await userRepository.save(student1);
 
-  // Add some activities for the student
+  const student2 = userRepository.create({
+    email: 'ayse@losev.org.tr',
+    password: demoPassword,
+    fullName: 'Ayşe Yılmaz',
+    role: UserRole.STUDENT,
+    status: UserStatus.APPROVED,
+    tcNo: '12345678902',
+    schoolName: 'LÖSEV Anadolu Lisesi',
+    city: 'İstanbul',
+    district: 'Beşiktaş',
+    grade: '11',
+    gsm: '5557654321',
+    coordinatorName: teacher.fullName,
+    teacherId: teacher.id,
+  });
+  await userRepository.save(student2);
+
+  console.log('Students created and assigned to teacher: student@losev.org.tr, ayse@losev.org.tr');
+
+  // 4. Create Pending User for Admin Approval
+  const pendingUser = userRepository.create({
+    email: 'new.volunteer@gmail.com',
+    password: demoPassword,
+    fullName: 'Caner Demir',
+    role: UserRole.STUDENT,
+    status: UserStatus.PENDING,
+    schoolName: 'Atatürk Fen Lisesi',
+    city: 'İzmir',
+    grade: '9',
+  });
+  await userRepository.save(pendingUser);
+  console.log('Pending student registration created for Admin approval testing.');
+
+  // 5. Add activities for students
   const activities = [
     {
       date: new Date().toISOString().split('T')[0],
@@ -67,7 +100,7 @@ export async function seedData(dataSource: DataSource) {
       hours: 2.5,
       description: 'LÖSEV Farkındalık Semineri katılımı.',
       status: ActivityStatus.APPROVED,
-      studentId: student.id,
+      studentId: student1.id,
     },
     {
       date: new Date().toISOString().split('T')[0],
@@ -75,7 +108,7 @@ export async function seedData(dataSource: DataSource) {
       hours: 5,
       description: 'AVM standında bilgilendirme çalışması.',
       status: ActivityStatus.APPROVED,
-      studentId: student.id,
+      studentId: student1.id,
     },
     {
       date: new Date(Date.now() - 86400000).toISOString().split('T')[0], // Yesterday
@@ -83,7 +116,23 @@ export async function seedData(dataSource: DataSource) {
       hours: 1,
       description: 'LÖSEV kampanyası paylaşımı.',
       status: ActivityStatus.PENDING,
-      studentId: student.id,
+      studentId: student1.id,
+    },
+    {
+      date: new Date().toISOString().split('T')[0],
+      type: ActivityType.BAZAAR,
+      hours: 4,
+      description: 'Kermes yardım faaliyeti.',
+      status: ActivityStatus.PENDING,
+      studentId: student2.id,
+    },
+    {
+      date: new Date().toISOString().split('T')[0],
+      type: ActivityType.DONATION,
+      hours: 2,
+      description: 'Bağış kampanyası desteği.',
+      status: ActivityStatus.PENDING,
+      studentId: student2.id,
     },
   ];
 
