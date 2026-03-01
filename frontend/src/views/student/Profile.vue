@@ -7,25 +7,27 @@
     <!-- User Info Card -->
     <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col items-center">
       <div class="w-24 h-24 bg-losev-red/10 rounded-full flex items-center justify-center text-losev-red font-bold text-3xl mb-4 border-4 border-white shadow-lg ring-2 ring-losev-red/5">
-        {{ user?.firstName?.[0] || 'İ' }}
+        {{ user?.fullName?.[0] || 'İ' }}
       </div>
-      <h2 class="text-xl font-bold text-gray-900">{{ user?.firstName }} {{ user?.lastName || 'İnci Gönüllü' }}</h2>
-      <p class="text-sm text-gray-500 font-medium">İnci Öğrencisi</p>
+      <h2 class="text-xl font-bold text-gray-900">{{ user?.fullName || 'İnci Gönüllü' }}</h2>
+      <p class="text-sm text-gray-500 font-medium">
+        {{ user?.role === 'STUDENT' ? 'İnci Öğrencisi' : user?.role === 'TEACHER' ? 'Gönüllü Öğretmen' : 'Yönetici' }}
+      </p>
 
-      <div class="mt-6 w-full grid grid-cols-2 gap-4">
+      <div v-if="user?.role === 'STUDENT'" class="mt-6 w-full grid grid-cols-2 gap-4">
         <div class="bg-gray-50 p-3 rounded-2xl border border-gray-100 text-center">
           <p class="text-[10px] font-bold text-gray-400 uppercase">Şehir</p>
-          <p class="text-sm font-bold text-gray-700">Ankara</p>
+          <p class="text-sm font-bold text-gray-700">{{ user?.city || '-' }}</p>
         </div>
         <div class="bg-gray-50 p-3 rounded-2xl border border-gray-100 text-center">
           <p class="text-[10px] font-bold text-gray-400 uppercase">Sınıf</p>
-          <p class="text-sm font-bold text-gray-700">10-B</p>
+          <p class="text-sm font-bold text-gray-700">{{ user?.grade || '-' }}</p>
         </div>
       </div>
     </div>
 
     <!-- Details -->
-    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+    <div v-if="user?.role === 'STUDENT'" class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
       <div class="p-6 border-b border-gray-50">
         <h3 class="font-bold text-gray-900 flex items-center gap-2">
           <School class="w-5 h-5 text-losev-red" />
@@ -35,11 +37,11 @@
       <div class="p-6 space-y-4">
         <div class="flex justify-between">
           <span class="text-sm text-gray-500 font-medium">Okul Adı</span>
-          <span class="text-sm text-gray-900 font-bold text-right">Ankara LÖSEV Koleji</span>
+          <span class="text-sm text-gray-900 font-bold text-right">{{ user?.schoolName || '-' }}</span>
         </div>
         <div class="flex justify-between">
           <span class="text-sm text-gray-500 font-medium">Koordinatör Öğretmen</span>
-          <span class="text-sm text-gray-900 font-bold text-right">Ayşe Yılmaz</span>
+          <span class="text-sm text-gray-900 font-bold text-right">{{ user?.coordinatorName || '-' }}</span>
         </div>
       </div>
     </div>
@@ -55,11 +57,11 @@
       <div class="p-6 space-y-4">
         <div class="flex justify-between">
           <span class="text-sm text-gray-500 font-medium">E-posta</span>
-          <span class="text-sm text-gray-900 font-bold text-right truncate ml-4">{{ user?.email || 'inci@losev.org.tr' }}</span>
+          <span class="text-sm text-gray-900 font-bold text-right truncate ml-4">{{ user?.email || '-' }}</span>
         </div>
-        <div class="flex justify-between">
+        <div v-if="user?.gsm" class="flex justify-between">
           <span class="text-sm text-gray-500 font-medium">Telefon</span>
-          <span class="text-sm text-gray-900 font-bold text-right">05xx xxx xx xx</span>
+          <span class="text-sm text-gray-900 font-bold text-right">{{ user?.gsm }}</span>
         </div>
       </div>
     </div>
@@ -76,7 +78,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../../store/auth'
 import {
@@ -88,6 +90,14 @@ import {
 const router = useRouter()
 const authStore = useAuthStore()
 const user = computed(() => authStore.user)
+
+onMounted(async () => {
+  try {
+    await authStore.fetchProfile()
+  } catch (err) {
+    console.error('Failed to fetch profile:', err)
+  }
+})
 
 const handleLogout = () => {
   authStore.logout()

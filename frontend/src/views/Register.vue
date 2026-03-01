@@ -1,26 +1,18 @@
 <template>
   <form @submit.prevent="handleSubmit" class="space-y-4 mt-6">
-    <div class="grid grid-cols-2 gap-4">
-      <div>
-        <label for="firstName" class="block text-sm font-medium text-gray-700">Ad</label>
-        <input
-          id="firstName"
-          v-model="firstName"
-          type="text"
-          required
-          class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-losev-red focus:border-losev-red sm:text-sm"
-        />
-      </div>
-      <div>
-        <label for="lastName" class="block text-sm font-medium text-gray-700">Soyad</label>
-        <input
-          id="lastName"
-          v-model="lastName"
-          type="text"
-          required
-          class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-losev-red focus:border-losev-red sm:text-sm"
-        />
-      </div>
+    <div v-if="error" class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm font-medium">
+      {{ error }}
+    </div>
+
+    <div>
+      <label for="fullName" class="block text-sm font-medium text-gray-700">Ad Soyad</label>
+      <input
+        id="fullName"
+        v-model="fullName"
+        type="text"
+        required
+        class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-losev-red focus:border-losev-red sm:text-sm"
+      />
     </div>
 
     <div>
@@ -36,40 +28,53 @@
     </div>
 
     <div>
-      <label for="school" class="block text-sm font-medium text-gray-700">Okul Adı</label>
-      <input
-        id="school"
-        v-model="school"
-        type="text"
-        required
-        class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-losev-red focus:border-losev-red sm:text-sm"
-        placeholder="LÖSEV Koleji"
-      />
+      <label for="role" class="block text-sm font-medium text-gray-700">Rolünüz</label>
+      <select
+        id="role"
+        v-model="role"
+        class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm bg-white focus:outline-none focus:ring-losev-red focus:border-losev-red sm:text-sm"
+      >
+        <option value="STUDENT">Öğrenci</option>
+        <option value="TEACHER">Öğretmen</option>
+      </select>
     </div>
 
-    <div class="grid grid-cols-2 gap-4">
+    <div v-if="role === 'STUDENT'" class="space-y-4">
       <div>
-        <label for="city" class="block text-sm font-medium text-gray-700">İl</label>
-        <select
-          id="city"
-          v-model="city"
-          class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm bg-white focus:outline-none focus:ring-losev-red focus:border-losev-red sm:text-sm"
-        >
-          <option value="Ankara">Ankara</option>
-          <option value="Istanbul">İstanbul</option>
-          <option value="Izmir">İzmir</option>
-        </select>
+        <label for="school" class="block text-sm font-medium text-gray-700">Okul Adı</label>
+        <input
+          id="school"
+          v-model="schoolName"
+          type="text"
+          required
+          class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-losev-red focus:border-losev-red sm:text-sm"
+          placeholder="LÖSEV Koleji"
+        />
       </div>
-      <div>
-        <label for="grade" class="block text-sm font-medium text-gray-700">Sınıf</label>
-        <select
-          id="grade"
-          v-model="grade"
-          class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm bg-white focus:outline-none focus:ring-losev-red focus:border-losev-red sm:text-sm"
-        >
-          <option v-for="n in 4" :key="n" :value="n+8">{{ n+8 }}. Sınıf</option>
-          <option value="Lise1">Hazırlık</option>
-        </select>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label for="city" class="block text-sm font-medium text-gray-700">İl</label>
+          <input
+            id="city"
+            v-model="city"
+            type="text"
+            required
+            class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-losev-red focus:border-losev-red sm:text-sm"
+            placeholder="Ankara"
+          />
+        </div>
+        <div>
+          <label for="grade" class="block text-sm font-medium text-gray-700">Sınıf</label>
+          <select
+            id="grade"
+            v-model="grade"
+            class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm bg-white focus:outline-none focus:ring-losev-red focus:border-losev-red sm:text-sm"
+          >
+            <option v-for="n in 4" :key="n" :value="(n+8).toString()">{{ n+8 }}. Sınıf</option>
+            <option value="Hazırlık">Hazırlık</option>
+          </select>
+        </div>
       </div>
     </div>
 
@@ -101,24 +106,45 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '../store/auth'
 
 const router = useRouter()
+const authStore = useAuthStore()
 
-const firstName = ref('')
-const lastName = ref('')
+const fullName = ref('')
 const email = ref('')
-const school = ref('')
-const city = ref('Ankara')
+const role = ref('STUDENT')
+const schoolName = ref('')
+const city = ref('')
 const grade = ref('9')
 const password = ref('')
 const loading = ref(false)
+const error = ref('')
 
 const handleSubmit = async () => {
   loading.value = true
-  // Mock registration
-  setTimeout(() => {
-    router.push('/login')
+  error.value = ''
+
+  const payload = {
+    fullName: fullName.value,
+    email: email.value,
+    role: role.value,
+    password: password.value,
+  }
+
+  if (role.value === 'STUDENT') {
+    payload.schoolName = schoolName.value
+    payload.city = city.value
+    payload.grade = grade.value
+  }
+
+  try {
+    await authStore.register(payload)
+    router.push('/login?registered=true')
+  } catch (err) {
+    error.value = err.message || 'Kayıt işlemi başarısız. Lütfen bilgilerinizi kontrol edin.'
+  } finally {
     loading.value = false
-  }, 1000)
+  }
 }
 </script>

@@ -8,6 +8,10 @@
     </div>
 
     <form @submit.prevent="handleSubmit" class="space-y-6 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+      <div v-if="error" class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm font-medium">
+        {{ error }}
+      </div>
+
       <div class="space-y-4">
         <div>
           <label class="block text-sm font-semibold text-gray-700 mb-1">Etkinlik Tarihi</label>
@@ -30,13 +34,13 @@
             class="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-losev-red focus:border-transparent outline-none transition-all appearance-none bg-white"
           >
             <option value="" disabled>Seçiniz...</option>
-            <option value="SEMINER">Seminer</option>
-            <option value="STANT">Stant</option>
-            <option value="BAGIS">Bağış</option>
-            <option value="KERMES">Kermes</option>
-            <option value="BILINCLENDIRME">Kamuoyu Bilinçlendirme</option>
-            <option value="SOSYAL_MEDYA">Sosyal Medya Çalışması</option>
-            <option value="FARKINDALIK">Farkındalık Etkinliği</option>
+            <option value="SEMINAR">Seminer</option>
+            <option value="STAND">Stant</option>
+            <option value="DONATION">Bağış</option>
+            <option value="BAZAAR">Kermes</option>
+            <option value="PUBLIC_AWARENESS">Kamuoyu Bilinçlendirme</option>
+            <option value="SOCIAL_MEDIA">Sosyal Medya Çalışması</option>
+            <option value="AWARENESS_EVENT">Farkındalık Etkinliği</option>
           </select>
         </div>
 
@@ -84,11 +88,14 @@
               class="hidden"
               accept="image/*,.pdf"
               @change="handleFileChange"
+              multiple
             />
           </div>
-          <div v-if="fileName" class="mt-2 flex items-center gap-2 bg-blue-50 p-3 rounded-xl border border-blue-100">
-            <CheckCircle class="w-4 h-4 text-blue-500" />
-            <span class="text-sm font-medium text-blue-700">{{ fileName }}</span>
+          <div v-if="files.length > 0" class="mt-2 space-y-2">
+            <div v-for="(file, index) in files" :key="index" class="flex items-center gap-2 bg-blue-50 p-3 rounded-xl border border-blue-100">
+              <CheckCircle class="w-4 h-4 text-blue-500" />
+              <span class="text-sm font-medium text-blue-700">{{ file.name }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -108,6 +115,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import { api } from '../../services/api'
 import {
   ArrowLeft,
   Calendar,
@@ -118,41 +126,44 @@ import {
 
 const router = useRouter()
 const loading = ref(false)
-const fileName = ref('')
+const error = ref('')
+const files = ref([])
 
 const form = reactive({
   date: new Date().toISOString().split('T')[0],
   type: '',
   hours: null,
-  description: '',
-  file: null
+  description: ''
 })
 
 const handleFileChange = (e) => {
-  const file = e.target.files[0]
-  if (file) {
-    form.file = file
-    fileName.value = file.name
+  const selectedFiles = Array.from(e.target.files)
+  if (selectedFiles.length > 0) {
+    files.value = selectedFiles.slice(0, 2) // Backend accepts max 2 files
   }
 }
 
 const handleSubmit = async () => {
   loading.value = true
+  error.value = ''
 
-  // Create FormData for real backend integration
   const formData = new FormData()
   formData.append('date', form.date)
   formData.append('type', form.type)
   formData.append('hours', form.hours)
   formData.append('description', form.description)
-  if (form.file) formData.append('file', form.file)
 
-  console.log('Sending activity request:', form)
+  files.value.forEach((file) => {
+    formData.append('files', file)
+  })
 
-  // Mock API call
-  setTimeout(() => {
-    loading.value = false
+  try {
+    await api.post('/activities', formData)
     router.push('/student/activities')
-  }, 1200)
+  } catch (err) {
+    error.value = err.message || 'Faaliyet kaydedilemedi. Lütfen bilgilerinizi kontrol edin.'
+  } finally {
+    loading.value = false
+  }
 }
 </script>
