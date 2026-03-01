@@ -2,12 +2,12 @@
   <div class="space-y-6">
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-bold text-gray-900">Faaliyet Geçmişim</h1>
-      <router-link to="/student/activity-add" class="bg-losev-red text-white p-2 rounded-xl active:scale-95 transition-transform">
+      <router-link to="/student/activity-add" class="bg-losev-blue text-white p-2 rounded-xl active:scale-95 transition-transform">
         <Plus class="w-6 h-6" />
       </router-link>
     </div>
 
-    <div v-if="error" class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm font-medium">
+    <div v-if="error" class="bg-blue-50 border border-blue-200 text-blue-600 px-4 py-3 rounded-xl text-sm font-medium">
       {{ error }}
     </div>
 
@@ -18,7 +18,7 @@
         :key="filter.id"
         @click="activeFilter = filter.id"
         class="px-4 py-2 rounded-full whitespace-nowrap text-sm font-semibold transition-colors"
-        :class="[activeFilter === filter.id ? 'bg-losev-red text-white shadow-sm' : 'bg-white text-gray-500 border border-gray-100']"
+        :class="[activeFilter === filter.id ? 'bg-losev-blue text-white shadow-sm' : 'bg-white text-gray-500 border border-gray-100']"
       >
         {{ filter.label }}
       </button>
@@ -26,7 +26,7 @@
 
     <!-- List -->
     <div v-if="loading" class="flex justify-center py-12">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-losev-red"></div>
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-losev-blue"></div>
     </div>
 
     <div v-else class="space-y-4">
@@ -50,7 +50,7 @@
           <p class="text-xs text-gray-500 mt-1 line-clamp-2">{{ activity.description }}</p>
 
           <div class="mt-3 flex items-center justify-between">
-            <div class="flex items-center gap-1 text-losev-red bg-losev-red/5 px-2 py-1 rounded-lg">
+            <div class="flex items-center gap-1 text-losev-blue bg-losev-blue/5 px-2 py-1 rounded-lg">
               <Clock class="w-3 h-3" />
               <span class="text-[10px] font-bold">{{ activity.hours }} Saat</span>
             </div>
@@ -64,8 +64,8 @@
           </div>
 
           <!-- Feedback if rejected or revision requested -->
-          <div v-if="(activity.status === 'REJECTED' || activity.status === 'REVISION_REQUESTED') && activity.rejectionReason" class="mt-3 bg-red-50 p-2 rounded-xl border border-red-100">
-            <p class="text-[10px] text-red-700 font-medium italic leading-tight">
+          <div v-if="(activity.status === 'REJECTED' || activity.status === 'REVISION_REQUESTED') && activity.rejectionReason" class="mt-3 bg-blue-50 p-2 rounded-xl border border-blue-100">
+            <p class="text-[10px] text-blue-700 font-medium italic leading-tight">
               <strong>Not:</strong> {{ activity.rejectionReason }}
             </p>
           </div>
@@ -77,7 +77,7 @@
           <History class="w-8 h-8 text-gray-300" />
         </div>
         <p class="text-gray-500 font-medium">Bu kategoride henüz kayıtlı faaliyetin bulunmuyor.</p>
-        <router-link to="/student/activity-add" class="mt-4 inline-block text-losev-red font-bold text-sm">Hemen bir tane ekle →</router-link>
+        <router-link to="/student/activity-add" class="mt-4 inline-block text-losev-blue font-bold text-sm">Hemen bir tane ekle →</router-link>
       </div>
     </div>
   </div>
@@ -157,8 +157,8 @@ const statusStyles = {
     icon: CheckCircle
   },
   REJECTED: {
-    bg: 'bg-red-50',
-    text: 'text-red-600',
+    bg: 'bg-blue-50',
+    text: 'text-blue-600',
     label: 'Reddedildi',
     icon: XCircle
   },

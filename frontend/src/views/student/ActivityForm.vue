@@ -8,7 +8,7 @@
     </div>
 
     <form @submit.prevent="handleSubmit" class="space-y-6 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-      <div v-if="error" class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm font-medium">
+      <div v-if="error" class="bg-blue-50 border border-blue-200 text-blue-600 px-4 py-3 rounded-xl text-sm font-medium">
         {{ error }}
       </div>
 
@@ -21,7 +21,7 @@
               v-model="form.date"
               type="date"
               required
-              class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-losev-red focus:border-transparent outline-none transition-all"
+              class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-losev-blue focus:border-transparent outline-none transition-all"
             />
           </div>
         </div>
@@ -31,7 +31,7 @@
           <select
             v-model="form.type"
             required
-            class="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-losev-red focus:border-transparent outline-none transition-all appearance-none bg-white"
+            class="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-losev-blue focus:border-transparent outline-none transition-all appearance-none bg-white"
           >
             <option value="" disabled>Seçiniz...</option>
             <option value="SEMINAR">Seminer</option>
@@ -54,7 +54,7 @@
               step="0.5"
               min="0.5"
               required
-              class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-losev-red focus:border-transparent outline-none transition-all"
+              class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-losev-blue focus:border-transparent outline-none transition-all"
               placeholder="Örn: 2.5"
             />
           </div>
@@ -66,7 +66,7 @@
             v-model="form.description"
             rows="3"
             required
-            class="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-losev-red focus:border-transparent outline-none transition-all resize-none"
+            class="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-losev-blue focus:border-transparent outline-none transition-all resize-none"
             placeholder="Neler yaptın? Kısaca bahset..."
           ></textarea>
         </div>
@@ -74,7 +74,7 @@
         <div>
           <label class="block text-sm font-semibold text-gray-700 mb-1">Fotoğraf / Belge Yükle</label>
           <div
-            class="border-2 border-dashed border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center gap-3 hover:border-losev-red transition-colors cursor-pointer"
+            class="border-2 border-dashed border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center gap-3 hover:border-losev-blue transition-colors cursor-pointer"
             @click="$refs.fileInput.click()"
           >
             <div class="bg-gray-50 p-3 rounded-full">
@@ -103,7 +103,7 @@
       <button
         type="submit"
         :disabled="loading"
-        class="w-full py-4 bg-losev-red text-white font-bold rounded-2xl shadow-lg shadow-losev-red/20 active:scale-95 transition-all disabled:opacity-50"
+        class="w-full py-4 bg-losev-blue text-white font-bold rounded-2xl shadow-lg shadow-losev-blue/20 active:scale-95 transition-all disabled:opacity-50"
       >
         <span v-if="loading">Gönderiliyor...</span>
         <span v-else>Faaliyeti Kaydet</span>

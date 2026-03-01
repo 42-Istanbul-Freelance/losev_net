@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="handleSubmit" class="space-y-6">
-    <div v-if="error" class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm font-medium">
+    <div v-if="error" class="bg-blue-50 border border-blue-200 text-blue-600 px-4 py-3 rounded-xl text-sm font-medium">
       {{ error }}
     </div>
 
@@ -12,7 +12,7 @@
           v-model="email"
           type="email"
           required
-          class="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-losev-red focus:border-losev-red sm:text-sm"
+          class="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-losev-blue focus:border-losev-blue sm:text-sm"
           placeholder="orne@email.com"
         />
       </div>
@@ -26,7 +26,7 @@
           v-model="password"
           type="password"
           required
-          class="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-losev-red focus:border-losev-red sm:text-sm"
+          class="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-losev-blue focus:border-losev-blue sm:text-sm"
           placeholder="••••••••"
         />
       </div>
@@ -34,11 +34,11 @@
 
     <div class="flex items-center justify-between">
       <div class="flex items-center">
-        <input id="remember-me" type="checkbox" class="h-4 w-4 text-losev-red focus:ring-losev-red border-gray-300 rounded" />
+        <input id="remember-me" type="checkbox" class="h-4 w-4 text-losev-blue focus:ring-losev-blue border-gray-300 rounded" />
         <label for="remember-me" class="ml-2 block text-sm text-gray-900">Beni Hatırla</label>
       </div>
       <div class="text-sm">
-        <a href="#" class="font-medium text-losev-red hover:text-red-700">Şifremi Unuttum</a>
+        <a href="#" class="font-medium text-losev-blue hover:text-blue-700">Şifremi Unuttum</a>
       </div>
     </div>
 
@@ -46,7 +46,7 @@
       <button
         type="submit"
         :disabled="loading"
-        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-losev-red hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-losev-red disabled:opacity-50 transition-colors"
+        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-losev-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-losev-blue disabled:opacity-50 transition-colors"
       >
         <span v-if="loading">Giriş Yapılıyor...</span>
         <span v-else>Giriş Yap</span>
