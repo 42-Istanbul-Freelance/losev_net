@@ -1,5 +1,5 @@
 # Build Frontend
-FROM node:18-alpine as frontend-build
+FROM node:22-alpine as frontend-build
 WORKDIR /app/frontend
 COPY frontend/package*.json ./
 RUN npm install
@@ -7,7 +7,7 @@ COPY frontend/ .
 RUN npm run build
 
 # Build Backend
-FROM node:18-alpine as backend-build
+FROM node:22-alpine as backend-build
 # Install build tools for native modules like sqlite3 and bcrypt
 RUN apk add --no-cache python3 make g++
 WORKDIR /app/backend
@@ -17,7 +17,7 @@ COPY backend/ .
 RUN npm run build
 
 # Production Stage
-FROM node:18-alpine
+FROM node:22-alpine
 WORKDIR /app
 
 # Copy Backend build files and only production dependencies
