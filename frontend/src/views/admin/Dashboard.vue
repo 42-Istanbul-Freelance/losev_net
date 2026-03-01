@@ -18,10 +18,10 @@
         </div>
         <div>
           <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Toplam Gönüllülük Saati</p>
-          <p class="text-3xl font-black text-gray-900">1,248,500+</p>
+          <p class="text-3xl font-black text-gray-900">{{ globalStats.totalApprovedHours.toLocaleString('tr-TR') }}+</p>
           <div class="mt-1 flex items-center gap-1 text-[10px] text-green-600 font-bold bg-green-50 px-2 py-0.5 rounded-full w-fit">
             <TrendingUp class="w-3 h-3" />
-            +8.2% (Bu Ay)
+            Aktif Sistem
           </div>
         </div>
       </div>
@@ -31,11 +31,11 @@
           <Users class="w-8 h-8" />
         </div>
         <div>
-          <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Aktif İnci Öğrenciler</p>
-          <p class="text-3xl font-black text-gray-900">42,850+</p>
+          <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Katkı Sağlayan İller</p>
+          <p class="text-3xl font-black text-gray-900">{{ globalStats.cityDistribution.length }} İl</p>
           <div class="mt-1 flex items-center gap-1 text-[10px] text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded-full w-fit">
             <MapPin class="w-3 h-3" />
-            81 İl
+            Türkiye Geneli
           </div>
         </div>
       </div>
@@ -46,19 +46,16 @@
       <div class="flex items-center justify-between mb-6">
         <h3 class="font-bold text-gray-900 flex items-center gap-2">
           <Map class="w-5 h-5 text-losev-red" />
-          Türkiye Etki Haritası
+          Şehir Bazlı Dağılım
         </h3>
-        <select class="text-xs font-bold border-none bg-gray-50 rounded-xl px-3 py-1.5 focus:ring-0">
-          <option>Tüm Zamanlar</option>
-          <option>Son 30 Gün</option>
-        </select>
       </div>
-      <div class="aspect-video bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100 flex items-center justify-center flex-col gap-3 group hover:border-losev-red transition-colors cursor-pointer">
-        <Globe class="w-12 h-12 text-gray-300 group-hover:text-losev-red transition-colors" />
-        <p class="text-gray-400 font-medium text-sm group-hover:text-losev-red transition-colors">Haritayı Etkinleştir</p>
+
+      <div v-if="loading" class="flex justify-center py-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-losev-red"></div>
       </div>
-      <div class="mt-6 flex justify-between items-center text-center">
-        <div v-for="city in topCities" :key="city.name" class="flex-1">
+
+      <div v-else class="mt-6 flex flex-wrap justify-between items-center text-center gap-4">
+        <div v-for="city in topCities" :key="city.name" class="flex-1 min-w-[120px]">
           <p class="text-xs font-bold text-gray-400 mb-1 uppercase tracking-widest">{{ city.name }}</p>
           <p class="text-lg font-black text-gray-900">{{ city.hours }}s</p>
           <div class="h-1 bg-gray-100 rounded-full mt-2 mx-4 overflow-hidden">
@@ -82,11 +79,11 @@
           <div class="flex items-center gap-4">
             <span class="text-sm font-black text-gray-300 w-4">{{ index + 1 }}</span>
             <div>
-              <p class="font-bold text-sm text-gray-900">{{ school.name }}</p>
-              <p class="text-[10px] text-gray-400 font-medium">{{ school.city }} - {{ school.volunteers }} Gönüllü</p>
+              <p class="font-bold text-sm text-gray-900">{{ school.schoolName }}</p>
+              <p class="text-[10px] text-gray-400 font-medium">{{ school.city || 'Belirtilmemiş' }}</p>
             </div>
           </div>
-          <p class="font-black text-losev-red text-sm">{{ school.hours }}s</p>
+          <p class="font-black text-losev-red text-sm">{{ school.totalHours }}s</p>
         </div>
       </div>
     </div>
@@ -94,6 +91,8 @@
 </template>
 
 <script setup>
+import { ref, onMounted, computed } from 'vue'
+import { api } from '../../services/api'
 import {
   Globe,
   Clock,
@@ -104,15 +103,53 @@ import {
   ArrowRight
 } from 'lucide-vue-next'
 
-const topCities = [
-  { name: 'Ankara', hours: '450k', percent: 90 },
-  { name: 'İstanbul', hours: '380k', percent: 75 },
-  { name: 'İzmir', hours: '210k', percent: 45 },
-]
+const globalStats = ref({
+  totalApprovedHours: 0,
+  cityDistribution: []
+})
 
-const topSchools = [
-  { name: 'Ankara LÖSEV Koleji', city: 'Ankara', volunteers: 850, hours: 24500 },
-  { name: 'İstanbul Fen Lisesi', city: 'İstanbul', volunteers: 420, hours: 18200 },
-  { name: 'Bornova Anadolu Lisesi', city: 'İzmir', volunteers: 310, hours: 15400 },
-]
+const rankings = ref({
+  topStudents: [],
+  topSchools: []
+})
+
+const loading = ref(false)
+
+const fetchGlobalStats = async () => {
+  try {
+    globalStats.value = await api.get('/activities/stats/global')
+  } catch (err) {
+    console.error('Failed to fetch global stats:', err)
+  }
+}
+
+const fetchRankings = async () => {
+  try {
+    rankings.value = await api.get('/activities/stats/rankings')
+  } catch (err) {
+    console.error('Failed to fetch rankings:', err)
+  }
+}
+
+onMounted(async () => {
+  loading.value = true
+  await Promise.all([fetchGlobalStats(), fetchRankings()])
+  loading.value = false
+})
+
+const topCities = computed(() => {
+  if (!globalStats.value.cityDistribution.length) return []
+
+  const sorted = [...globalStats.value.cityDistribution].sort((a, b) => b.totalHours - a.totalHours)
+  const max = sorted[0].totalHours
+
+  return sorted.slice(0, 3).map(c => ({
+    name: c.city,
+    hours: c.totalHours,
+    percent: (c.totalHours / max) * 100
+  }))
+})
+
+const topSchools = computed(() => rankings.value.topSchools.slice(0, 3))
+
 </script>
