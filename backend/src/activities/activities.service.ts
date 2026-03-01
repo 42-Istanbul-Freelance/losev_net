@@ -51,8 +51,21 @@ export class ActivitiesService {
       where: { studentId, status: ActivityStatus.APPROVED },
     });
     const totalHours = activities.reduce((sum, activity) => sum + activity.hours, 0);
+
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
+    const monthlyHours = activities
+      .filter((a) => {
+        const d = new Date(a.date);
+        return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+      })
+      .reduce((sum, activity) => sum + activity.hours, 0);
+
     return {
       totalHours,
+      monthlyHours,
       activityCount: activities.length,
     };
   }
