@@ -13,7 +13,12 @@ const handleResponse = async (response) => {
       errorData = { message: 'Bir hata oluştu.' };
     }
 
-    const error = new Error(errorData.message || 'Bir hata oluştu.');
+    let message = errorData.message || 'Bir hata oluştu.';
+    if (Array.isArray(message)) {
+      message = message.join(' ');
+    }
+
+    const error = new Error(message);
     error.status = response.status;
     error.data = errorData;
     throw error;
