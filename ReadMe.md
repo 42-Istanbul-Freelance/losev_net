@@ -1,40 +1,61 @@
-# LÖSEV Sosyal Sorumluluk Uygulama Çalışması
+# LÖSEV İnci Gönüllülük Takip Sistemi
 
-Bu depo, katılımcıların geliştireceği **iki farklı uygulama** için başlangıç referanslarını içerir.
+Bu proje, LÖSEV İnci öğrencilerinin gönüllülük faaliyetlerini takip etmek amacıyla geliştirilmiştir. Frontend (Vue.js) ve Backend (NestJS) tek bir konteyner üzerinden sunulmaktadır.
 
-Amaç yalnızca teknik ürün üretmek değil; LÖSEV değerlerini dijital deneyimle destekleyen, gerçek hayata dokunan çözümler geliştirmektir.
+## Proje Yapısı
 
-## İçerik
+- `frontend/`: Vue.js uygulaması
+- `backend/`: NestJS API uygulaması
+- `Dockerfile`: Her iki uygulamayı da derleyip sunan birleşik Docker dosyası
 
-Bu depodaki iki ana referans doküman:
+## Başlangıç
 
-1. [FARKINDALIK_MOBIL.md](./FARKINDALIK_MOBIL.md)  
-   Çocuklara iyilik, paylaşma, gönüllülük, sağlık ve günlük iyi alışkanlıkları kazandırmayı hedefleyen oyunlaştırılmış mobil uygulama.
-2. [GONULLU_TAKIP.md](./GONULLU_TAKIP.md)  
-   LÖSEV İnci öğrencilerinin gönüllülük faaliyetlerini kayıt, onay ve raporlama süreçleriyle takip eden sistem.
+### Ön Gereksinimler
 
-## Katılımcılardan Beklenenler
+- Docker (veya Node.js 20+)
 
-Katılımcılar/ekipler, aşağıdaki iki projeden **birini seçerek** ona odaklanır:
+### Docker ile Çalıştırma (Tavsiye Edilen)
 
-1. **İyilik ve Sağlık Alışkanlıkları Mobil Uygulaması**
-2. **LÖSEV İnci Gönüllülük Takip Sistemi**
+Uygulamayı tek bir port üzerinden (8080) çalıştırmak için:
 
-Seçilen proje, aşağıdaki örnek dokümanlardan biri üzerinden ilerletilir.
-Dokümanlar, LÖSEV tarafından paylaşılan örnek slaytların referanslaştırılmış halidir; kapsam korunarak yaratıcı geliştirmeler yapılabilir.
+1.  Resmi derleyin:
+    ```bash
+    docker build -t losev-inci .
+    ```
 
-## Katılım Yaklaşımı
+2.  Konteyneri çalıştırın (Veri kalıcılığı için yerel bir dizini bağlamayı unutmayın):
+    ```bash
+    docker run -p 8080:8080 \
+      -v $(pwd)/data:/app/backend/data \
+      -v $(pwd)/uploads:/app/backend/uploads \
+      --name losev-inci-container \
+      losev-inci
+    ```
 
-Bu çalışma bir ürün teslim yarışından çok, sosyal sorumluluk odağında bir öğrenme ve üretim etkinliğidir.
+**Önemli:** Verilerin silinmemesi için `-v` parametresi ile `data` ve `uploads` klasörlerini bilgisayarınızdaki bir klasöre bağlamanız gerekir.
 
-Ekiplerden beklenen:
+### Yerel Geliştirme (Docker Olmadan)
 
-- Seçilen proje fikrini anlamlı bir konsept ve akışla ele almak
-- Hedef kitleye uygun, anlaşılır bir deneyim ortaya koymak
-- Sosyal etkiyi önceleyen yaratıcı çözüm önerileri geliştirmek
-- İster prototip ister çalışan sürüm olsun, yaklaşımını net şekilde anlatmak
+#### Backend'i Çalıştırma:
+```bash
+cd backend
+npm install
+npm run start:dev
+```
+Backend `http://localhost:8080/api` üzerinden çalışacaktır.
 
-## Teknik Not
+#### Frontend'i Çalıştırma:
+```bash
+cd frontend
+npm install
+npm run dev
+```
+Frontend `http://localhost:5173` üzerinden çalışacaktır.
 
-Teknoloji seçimi serbesttir (native, cross-platform, web tabanlı, offline-first vb.).  
-Önemli olan; çözümün amaca hizmet etmesi, anlaşılır olması ve gerçek kullanım senaryosuna yaklaşmasıdır.
+## API Dokümantasyonu
+
+Uygulama çalıştıktan sonra `http://localhost:8080/api/docs` adresinden tüm API uç noktalarına ve modellerine ulaşabilirsiniz.
+
+## Entegrasyon Rehberi
+
+Frontend ve Backend entegrasyonu hakkında detaylı bilgi için `INTEGRATION_GUIDE.md` dosyasına bakınız.
