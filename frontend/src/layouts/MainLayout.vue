@@ -80,13 +80,12 @@ const navItems = computed(() => {
     return [
       { path: '/teacher/dashboard', label: 'Özet', icon: LayoutDashboard },
       { path: '/teacher/approvals', label: 'Onaylar', icon: CheckCircle },
-      { path: '/student/profile', label: 'Profil', icon: User },
+      { path: '/teacher/profile', label: 'Profil', icon: User },
     ]
   } else if (role.value === 'ADMIN') {
     return [
       { path: '/admin/dashboard', label: 'Dashboard', icon: BarChart3 },
       { path: '/admin/rankings', label: 'Sıralama', icon: Trophy },
-      { path: '/student/profile', label: 'Profil', icon: User },
     ]
   } else {
     return [

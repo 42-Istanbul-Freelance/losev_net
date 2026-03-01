@@ -32,8 +32,12 @@ export class UsersService {
     return this.usersRepository.findOne({ where: { id } });
   }
 
-  async updateStatus(id: number, status: UserStatus): Promise<User> {
-    await this.usersRepository.update(id, { status });
+  async updateStatus(id: number, status: UserStatus, teacherId?: number): Promise<User> {
+    const updateData: any = { status };
+    if (teacherId) {
+      updateData.teacherId = teacherId;
+    }
+    await this.usersRepository.update(id, updateData);
     const user = await this.findOneById(id);
     if (!user) {
       throw new NotFoundException('Kullanıcı bulunamadı.');

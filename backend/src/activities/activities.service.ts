@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Activity, ActivityStatus } from './activity.entity';
-import { User } from '../users/user.entity';
+import { User, UserRole } from '../users/user.entity';
 
 @Injectable()
 export class ActivitiesService {
@@ -26,12 +26,16 @@ export class ActivitiesService {
     });
   }
 
-  async findAllPending(): Promise<Activity[]> {
-    return this.activitiesRepository.find({
-      where: { status: ActivityStatus.PENDING },
-      relations: ['student'],
-      order: { createdAt: 'ASC' },
-    });
+  async findAllPending(user: User): Promise<Activity[]> {
+    const query = this.activitiesRepository.createQueryBuilder('activity')
+      .leftJoinAndSelect('activity.student', 'student')
+      .where('activity.status = :status', { status: ActivityStatus.PENDING });
+
+    if (user.role === UserRole.TEACHER) {
+      query.andWhere('student.teacherId = :teacherId', { teacherId: user.id });
+    }
+
+    return query.orderBy('activity.createdAt', 'ASC').getMany();
   }
 
   async updateStatus(id: number, status: ActivityStatus, rejectionReason?: string): Promise<Activity> {
@@ -87,8 +91,11 @@ export class ActivitiesService {
       .getRawMany();
 
     return {
-      totalHours: parseFloat(totalHours?.total || '0'),
-      statsByCity,
+      totalApprovedHours: parseFloat(totalHours?.total || '0'),
+      cityDistribution: statsByCity.map((s) => ({
+        city: s.city,
+        totalHours: parseFloat(s.hours || '0'),
+      })),
     };
   }
 

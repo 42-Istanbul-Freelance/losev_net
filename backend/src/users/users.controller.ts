@@ -41,6 +41,14 @@ export class UsersController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserStatusDto: UpdateUserStatusDto
   ) {
-    return this.usersService.updateStatus(id, updateUserStatusDto.status);
+    return this.usersService.updateStatus(id, updateUserStatusDto.status, updateUserStatusDto.teacherId);
+  }
+
+  @Get('teachers')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Tüm öğretmenleri listele (Admin)' })
+  async getTeachers() {
+    return this.usersService.findAllByRole(UserRole.TEACHER);
   }
 }
