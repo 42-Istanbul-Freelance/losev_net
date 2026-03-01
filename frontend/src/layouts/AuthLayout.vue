@@ -16,14 +16,14 @@
           <button
             @click="$router.push('/login')"
             class="flex-1 py-2 text-sm font-medium rounded-lg transition-all"
-            :class="[$route.path === '/login' ? 'bg-white shadow text-losev-red' : 'text-gray-500']"
+            :class="[$route.path === '/login' ? 'bg-white shadow text-losev-blue' : 'text-gray-500']"
           >
             Giriş Yap
           </button>
           <button
             @click="$router.push('/register')"
             class="flex-1 py-2 text-sm font-medium rounded-lg transition-all"
-            :class="[$route.path === '/register' ? 'bg-white shadow text-losev-red' : 'text-gray-500']"
+            :class="[$route.path === '/register' ? 'bg-white shadow text-losev-blue' : 'text-gray-500']"
           >
             Kayıt Ol
           </button>

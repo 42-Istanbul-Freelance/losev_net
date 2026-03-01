@@ -31,7 +31,7 @@
     </div>
 
     <!-- Approval Call to Action -->
-    <router-link to="/teacher/approvals" class="bg-losev-red p-6 rounded-3xl shadow-lg shadow-losev-red/20 flex items-center justify-between group active:scale-[0.98] transition-all">
+    <router-link to="/teacher/approvals" class="bg-losev-blue p-6 rounded-3xl shadow-lg shadow-losev-blue/20 flex items-center justify-between group active:scale-[0.98] transition-all">
       <div class="flex items-center gap-4">
         <div class="bg-white/20 p-3 rounded-2xl text-white">
           <CheckCircle class="w-8 h-8" />
@@ -51,7 +51,7 @@
     <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
       <div class="p-6 border-b border-gray-50 flex items-center justify-between">
         <h3 class="font-bold text-gray-900">En Aktif İnci Öğrenciler</h3>
-        <router-link to="#" class="text-losev-red text-xs font-bold">Tümünü Gör</router-link>
+        <router-link to="#" class="text-losev-blue text-xs font-bold">Tümünü Gör</router-link>
       </div>
       <div class="divide-y divide-gray-50">
         <div v-for="(student, index) in activeStudents" :key="index" class="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
@@ -65,7 +65,7 @@
             </div>
           </div>
           <div class="text-right">
-            <p class="font-black text-losev-red text-sm">{{ student.hours }}s</p>
+            <p class="font-black text-losev-blue text-sm">{{ student.hours }}s</p>
             <p class="text-[10px] text-gray-400 font-bold uppercase">{{ student.badge }}</p>
           </div>
         </div>

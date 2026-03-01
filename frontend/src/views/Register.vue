@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="handleSubmit" class="space-y-4 mt-6">
-    <div v-if="error" class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm font-medium">
+    <div v-if="error" class="bg-blue-50 border border-blue-200 text-blue-600 px-4 py-3 rounded-xl text-sm font-medium">
       {{ error }}
     </div>
 
@@ -11,7 +11,7 @@
         v-model="fullName"
         type="text"
         required
-        class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-losev-red focus:border-losev-red sm:text-sm"
+        class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-losev-blue focus:border-losev-blue sm:text-sm"
       />
     </div>
 
@@ -22,7 +22,7 @@
         v-model="email"
         type="email"
         required
-        class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-losev-red focus:border-losev-red sm:text-sm"
+        class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-losev-blue focus:border-losev-blue sm:text-sm"
         placeholder="orne@email.com"
       />
     </div>
@@ -32,7 +32,7 @@
       <select
         id="role"
         v-model="role"
-        class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm bg-white focus:outline-none focus:ring-losev-red focus:border-losev-red sm:text-sm"
+        class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm bg-white focus:outline-none focus:ring-losev-blue focus:border-losev-blue sm:text-sm"
       >
         <option value="STUDENT">Öğrenci</option>
         <option value="TEACHER">Öğretmen</option>
@@ -47,7 +47,7 @@
           v-model="schoolName"
           type="text"
           required
-          class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-losev-red focus:border-losev-red sm:text-sm"
+          class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-losev-blue focus:border-losev-blue sm:text-sm"
           placeholder="LÖSEV Koleji"
         />
       </div>
@@ -60,7 +60,7 @@
             v-model="city"
             type="text"
             required
-            class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-losev-red focus:border-losev-red sm:text-sm"
+            class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-losev-blue focus:border-losev-blue sm:text-sm"
             placeholder="Ankara"
           />
         </div>
@@ -69,7 +69,7 @@
           <select
             id="grade"
             v-model="grade"
-            class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm bg-white focus:outline-none focus:ring-losev-red focus:border-losev-red sm:text-sm"
+            class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm bg-white focus:outline-none focus:ring-losev-blue focus:border-losev-blue sm:text-sm"
           >
             <option v-for="n in 4" :key="n" :value="(n+8).toString()">{{ n+8 }}. Sınıf</option>
             <option value="Hazırlık">Hazırlık</option>
@@ -85,7 +85,7 @@
         v-model="password"
         type="password"
         required
-        class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-losev-red focus:border-losev-red sm:text-sm"
+        class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-losev-blue focus:border-losev-blue sm:text-sm"
         placeholder="••••••••"
       />
     </div>
@@ -94,7 +94,7 @@
       <button
         type="submit"
         :disabled="loading"
-        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-losev-red hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-losev-red disabled:opacity-50 transition-colors"
+        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-losev-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-losev-blue disabled:opacity-50 transition-colors"
       >
         <span v-if="loading">Kayıt Yapılıyor...</span>
         <span v-else>Hesap Oluştur</span>

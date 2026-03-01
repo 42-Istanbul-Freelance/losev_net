@@ -5,7 +5,7 @@
         <h1 class="text-2xl font-bold text-gray-900">Genel Merkez Paneli</h1>
         <p class="text-gray-500">Türkiye Geneli Etki Analizi</p>
       </div>
-      <div class="bg-losev-red p-3 rounded-2xl border border-losev-red/20">
+      <div class="bg-losev-blue p-3 rounded-2xl border border-losev-blue/20">
         <Globe class="w-8 h-8 text-white" />
       </div>
     </div>
@@ -45,13 +45,13 @@
     <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
       <div class="flex items-center justify-between mb-6">
         <h3 class="font-bold text-gray-900 flex items-center gap-2">
-          <Map class="w-5 h-5 text-losev-red" />
+          <Map class="w-5 h-5 text-losev-blue" />
           Şehir Bazlı Dağılım
         </h3>
       </div>
 
       <div v-if="loading" class="flex justify-center py-12">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-losev-red"></div>
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-losev-blue"></div>
       </div>
 
       <div v-else class="mt-6 flex flex-wrap justify-between items-center text-center gap-4">
@@ -59,7 +59,7 @@
           <p class="text-xs font-bold text-gray-400 mb-1 uppercase tracking-widest">{{ city.name }}</p>
           <p class="text-lg font-black text-gray-900">{{ city.hours }}s</p>
           <div class="h-1 bg-gray-100 rounded-full mt-2 mx-4 overflow-hidden">
-             <div class="bg-losev-red h-full rounded-full" :style="{ width: city.percent + '%' }"></div>
+             <div class="bg-losev-blue h-full rounded-full" :style="{ width: city.percent + '%' }"></div>
           </div>
         </div>
       </div>
@@ -83,7 +83,7 @@
     <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
       <div class="p-6 border-b border-gray-50 flex items-center justify-between">
         <h3 class="font-bold text-gray-900">Lider Okullar</h3>
-        <router-link to="/admin/rankings" class="text-losev-red text-xs font-bold flex items-center gap-1">
+        <router-link to="/admin/rankings" class="text-losev-blue text-xs font-bold flex items-center gap-1">
           Tümünü Gör
           <ArrowRight class="w-3 h-3" />
         </router-link>
@@ -97,7 +97,7 @@
               <p class="text-[10px] text-gray-400 font-medium">{{ school.city || 'Belirtilmemiş' }}</p>
             </div>
           </div>
-          <p class="font-black text-losev-red text-sm">{{ school.totalHours }}s</p>
+          <p class="font-black text-losev-blue text-sm">{{ school.totalHours }}s</p>
         </div>
       </div>
     </div>

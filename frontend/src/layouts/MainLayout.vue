@@ -4,10 +4,10 @@
     <header class="bg-white border-b h-16 flex items-center justify-between px-4 sticky top-0 z-10">
       <div class="flex items-center gap-2">
         <img src="https://www.losev.org.tr/frontend/images/logo.png" alt="LÖSEV Logo" class="h-10" />
-        <span class="font-bold text-losev-red hidden sm:block">İnci Takip Sistemi</span>
+        <span class="font-bold text-losev-blue hidden sm:block">İnci Takip Sistemi</span>
       </div>
       <div class="flex items-center gap-4">
-        <button @click="handleLogout" class="text-gray-500 hover:text-losev-red transition-colors">
+        <button @click="handleLogout" class="text-gray-500 hover:text-losev-blue transition-colors">
           <LogOut class="w-6 h-6" />
         </button>
       </div>
@@ -17,7 +17,7 @@
     <aside class="hidden sm:flex flex-col w-64 bg-white border-r fixed left-0 top-0 bottom-0 z-20">
       <div class="p-6">
         <img src="https://www.losev.org.tr/frontend/images/logo.png" alt="LÖSEV Logo" class="h-12" />
-        <p class="mt-2 text-sm font-semibold text-losev-red italic">Gönüllülük Takip Sistemi</p>
+        <p class="mt-2 text-sm font-semibold text-losev-blue italic">Gönüllülük Takip Sistemi</p>
       </div>
       <nav class="flex-1 px-4 space-y-2">
         <router-link
@@ -25,7 +25,7 @@
           :key="item.path"
           :to="item.path"
           class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors"
-          :class="[$route.path.includes(item.path) ? 'bg-losev-red text-white' : 'text-gray-600 hover:bg-gray-100']"
+          :class="[$route.path.includes(item.path) ? 'bg-losev-blue text-white' : 'text-gray-600 hover:bg-gray-100']"
         >
           <component :is="item.icon" class="w-5 h-5" />
           <span class="font-medium">{{ item.label }}</span>
@@ -40,7 +40,7 @@
         :key="item.path"
         :to="item.path"
         class="flex flex-col items-center justify-center flex-1 h-full transition-colors"
-        :class="[$route.path.includes(item.path) ? 'text-losev-red' : 'text-gray-400']"
+        :class="[$route.path.includes(item.path) ? 'text-losev-blue' : 'text-gray-400']"
       >
         <component :is="item.icon" class="w-6 h-6" />
         <span class="text-[10px] mt-1 font-medium">{{ item.label }}</span>

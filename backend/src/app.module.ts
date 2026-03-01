@@ -23,7 +23,7 @@ import { ActivitiesModule } from './activities/activities.module';
     }),
     ServeStaticModule.forRoot({
       // Frontend dist is at /app/frontend/dist, cwd is /app
-      rootPath: join(process.cwd(), 'frontend', 'dist'),
+      rootPath: join(process.cwd(), '..', 'frontend', 'dist'),
       exclude: ['/api/(.*)'],
     }),
     UsersModule,

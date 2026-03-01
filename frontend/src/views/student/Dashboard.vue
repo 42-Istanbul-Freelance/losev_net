@@ -39,7 +39,7 @@
         </div>
         <div>
           <p class="text-sm text-gray-500 font-medium">Sıradaki Hedef</p>
-          <p class="text-2xl font-bold text-losev-red">{{ nextBadgeName }}</p>
+          <p class="text-2xl font-bold text-losev-blue">{{ nextBadgeName }}</p>
         </div>
       </div>
     </div>
@@ -48,29 +48,29 @@
     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
       <div class="flex justify-between items-center mb-4">
         <h2 class="font-bold text-gray-900">Rozet İlerlemesi</h2>
-        <span class="text-sm font-medium text-losev-red" v-if="nextBadgeThreshold > stats.totalHours">{{ (nextBadgeThreshold - stats.totalHours).toFixed(1) }} saat kaldı</span>
+        <span class="text-sm font-medium text-losev-blue" v-if="nextBadgeThreshold > stats.totalHours">{{ (nextBadgeThreshold - stats.totalHours).toFixed(1) }} saat kaldı</span>
         <span class="text-sm font-medium text-green-600" v-else>Tüm rozetler tamamlandı!</span>
       </div>
       <div class="w-full bg-gray-100 rounded-full h-4 mb-2">
-        <div class="bg-losev-red h-4 rounded-full transition-all duration-500" :style="{ width: progressPercentage + '%' }"></div>
+        <div class="bg-losev-blue h-4 rounded-full transition-all duration-500" :style="{ width: progressPercentage + '%' }"></div>
       </div>
       <div class="flex justify-between text-[10px] text-gray-400 font-bold uppercase tracking-wider">
         <span>Başlangıç</span>
-        <span :class="{'text-losev-red': stats.totalHours < 25}">Bronz (25s)</span>
-        <span :class="{'text-losev-red': stats.totalHours >= 25 && stats.totalHours < 50}">Gümüş (50s)</span>
-        <span :class="{'text-losev-red': stats.totalHours >= 50 && stats.totalHours < 100}">Altın (100s)</span>
-        <span :class="{'text-losev-red': stats.totalHours >= 100}">Platin (200s)</span>
+        <span :class="{'text-losev-blue': stats.totalHours < 25}">Bronz (25s)</span>
+        <span :class="{'text-losev-blue': stats.totalHours >= 25 && stats.totalHours < 50}">Gümüş (50s)</span>
+        <span :class="{'text-losev-blue': stats.totalHours >= 50 && stats.totalHours < 100}">Altın (100s)</span>
+        <span :class="{'text-losev-blue': stats.totalHours >= 100}">Platin (200s)</span>
       </div>
     </div>
 
     <!-- Quick Actions -->
     <div class="grid grid-cols-2 gap-4">
-      <router-link to="/student/activity-add" class="bg-losev-red text-white p-4 rounded-2xl flex flex-col items-center justify-center gap-2 shadow-lg shadow-losev-red/20 active:scale-95 transition-transform">
+      <router-link to="/student/activity-add" class="bg-losev-blue text-white p-4 rounded-2xl flex flex-col items-center justify-center gap-2 shadow-lg shadow-losev-blue/20 active:scale-95 transition-transform">
         <PlusCircle class="w-8 h-8" />
         <span class="font-bold text-sm">Etkinlik Ekle</span>
       </router-link>
       <router-link to="/student/activities" class="bg-white text-gray-700 p-4 rounded-2xl flex flex-col items-center justify-center gap-2 border border-gray-200 active:scale-95 transition-transform">
-        <History class="w-8 h-8 text-losev-red" />
+        <History class="w-8 h-8 text-losev-blue" />
         <span class="font-bold text-sm">Geçmişim</span>
       </router-link>
     </div>

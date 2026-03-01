@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsEnum, IsNumber, IsString, IsOptional, Min } from 'class-validator';
+import { Type } from 'class-transformer';
 import { ActivityType, ActivityStatus } from './activity.entity';
 
 export class CreateActivityDto {
@@ -14,6 +15,7 @@ export class CreateActivityDto {
   @ApiProperty()
   @IsNumber({}, { message: 'Geçerli bir saat giriniz.' })
   @Min(0.5, { message: 'En az 0.5 saat girilmelidir.' })
+  @Type(() => Number)
   hours: number;
 
   @ApiProperty()
