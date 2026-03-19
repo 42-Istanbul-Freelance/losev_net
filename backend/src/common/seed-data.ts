@@ -1,11 +1,15 @@
 import { DataSource } from 'typeorm';
 import { User, UserRole, UserStatus } from '../users/user.entity';
 import { Activity, ActivityType, ActivityStatus } from '../activities/activity.entity';
+import { ActivityParticipant, ParticipantStatus } from '../activities/participant.entity';
+import { Announcement } from '../announcements/announcement.entity';
 import * as bcrypt from 'bcrypt';
 
 export async function seedData(dataSource: DataSource) {
   const userRepository = dataSource.getRepository(User);
   const activityRepository = dataSource.getRepository(Activity);
+  const participantRepository = dataSource.getRepository(ActivityParticipant);
+  const announcementRepository = dataSource.getRepository(Announcement);
 
   // Check if we already have users
   const userCount = await userRepository.count();
@@ -90,56 +94,54 @@ export async function seedData(dataSource: DataSource) {
     grade: '9',
   });
   await userRepository.save(pendingUser);
-  console.log('Pending student registration created for Admin approval testing.');
 
-  // 5. Add activities for students
-  const activities = [
-    {
-      date: new Date().toISOString().split('T')[0],
-      type: ActivityType.SEMINAR,
-      hours: 2.5,
-      description: 'LÖSEV Farkındalık Semineri katılımı.',
-      status: ActivityStatus.APPROVED,
-      studentId: student1.id,
-    },
-    {
-      date: new Date().toISOString().split('T')[0],
-      type: ActivityType.STAND,
-      hours: 5,
-      description: 'AVM standında bilgilendirme çalışması.',
-      status: ActivityStatus.APPROVED,
-      studentId: student1.id,
-    },
-    {
-      date: new Date(Date.now() - 86400000).toISOString().split('T')[0], // Yesterday
-      type: ActivityType.SOCIAL_MEDIA,
-      hours: 1,
-      description: 'LÖSEV kampanyası paylaşımı.',
-      status: ActivityStatus.PENDING,
-      studentId: student1.id,
-    },
-    {
-      date: new Date().toISOString().split('T')[0],
-      type: ActivityType.BAZAAR,
-      hours: 4,
-      description: 'Kermes yardım faaliyeti.',
-      status: ActivityStatus.PENDING,
-      studentId: student2.id,
-    },
-    {
-      date: new Date().toISOString().split('T')[0],
-      type: ActivityType.DONATION,
-      hours: 2,
-      description: 'Bağış kampanyası desteği.',
-      status: ActivityStatus.PENDING,
-      studentId: student2.id,
-    },
-  ];
+  // 5. Create Activities
+  const activity1 = activityRepository.create({
+    date: new Date().toISOString().split('T')[0],
+    type: ActivityType.SEMINAR,
+    hours: 2.5,
+    description: 'LÖSEV Farkındalık Semineri',
+    status: ActivityStatus.APPROVED,
+    creatorId: admin.id,
+  });
+  await activityRepository.save(activity1);
 
-  for (const actData of activities) {
-    const activity = activityRepository.create(actData);
-    await activityRepository.save(activity);
-  }
-  console.log('Mock activities created for student');
+  const activity2 = activityRepository.create({
+    date: new Date().toISOString().split('T')[0],
+    type: ActivityType.STAND,
+    hours: 5,
+    description: 'AVM Bilgilendirme Standı',
+    status: ActivityStatus.APPROVED,
+    creatorId: teacher.id,
+  });
+  await activityRepository.save(activity2);
+
+  // 6. Create Participations
+  await participantRepository.save(participantRepository.create({
+    activityId: activity1.id,
+    studentId: student1.id,
+    status: ParticipantStatus.APPROVED,
+  }));
+
+  await participantRepository.save(participantRepository.create({
+    activityId: activity2.id,
+    studentId: student1.id,
+    status: ParticipantStatus.PENDING,
+  }));
+
+  await participantRepository.save(participantRepository.create({
+    activityId: activity1.id,
+    studentId: student2.id,
+    status: ParticipantStatus.PENDING,
+  }));
+
+  // 7. Create Announcements
+  await announcementRepository.save(announcementRepository.create({
+    title: 'Yeni Gönüllülük Dönemi Başladı!',
+    content: 'Tüm İnci öğrencilerimiz için 30 saatlik gönüllülük hedefi aktiftir.',
+    creatorId: admin.id,
+  }));
+
+  console.log('Mock data and announcements created.');
   console.log('Automatic seeding complete.');
 }
