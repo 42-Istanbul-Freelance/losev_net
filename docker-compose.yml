@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  losev-inci:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data
+      - ./uploads:/app/uploads
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+      - DB_PATH=/app/data/database.sqlite
+    restart: always

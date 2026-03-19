@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ActivitiesModule } from './activities/activities.module';
+import { AnnouncementsModule } from './announcements/announcements.module';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { ActivitiesModule } from './activities/activities.module';
     TypeOrmModule.forRoot({
       type: 'sqlite',
       // Using absolute path from current working directory (app root in Docker)
-      database: join(process.cwd(), 'data', 'database.sqlite'),
+      database: process.env.DB_PATH || join(process.cwd(), 'data', 'database.sqlite'),
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
@@ -32,6 +33,7 @@ import { ActivitiesModule } from './activities/activities.module';
     UsersModule,
     AuthModule,
     ActivitiesModule,
+    AnnouncementsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

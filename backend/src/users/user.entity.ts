@@ -64,8 +64,6 @@ export class User {
   @OneToMany(() => User, (user) => user.teacher)
   students: User[];
 
-  @OneToMany(() => Activity, (activity) => activity.student)
-  activities: Activity[];
 
   @CreateDateColumn()
   createdAt: Date;

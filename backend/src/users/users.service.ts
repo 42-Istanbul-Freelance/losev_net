@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User, UserStatus, UserRole } from './user.entity';
@@ -32,21 +32,37 @@ export class UsersService {
     return this.usersRepository.findOne({ where: { id } });
   }
 
-  async updateStatus(id: number, status: UserStatus, teacherId?: number): Promise<User> {
-    const updateData: any = { status };
-    if (teacherId) {
-      updateData.teacherId = teacherId;
-    }
-    await this.usersRepository.update(id, updateData);
-    const user = await this.findOneById(id);
-    if (!user) {
+  async updateStatus(id: number, status: UserStatus, currentUser: User, teacherId?: number): Promise<User> {
+    const userToUpdate = await this.findOneById(id);
+    if (!userToUpdate) {
       throw new NotFoundException('Kullanıcı bulunamadı.');
     }
-    return user;
+
+    if (currentUser.role === UserRole.TEACHER) {
+      if (userToUpdate.role !== UserRole.STUDENT) {
+        throw new ForbiddenException('Öğretmenler sadece öğrencileri onaylayabilir.');
+      }
+      // Note: If teacher is approving, they become the coordinator for that student
+      userToUpdate.teacherId = currentUser.id;
+    }
+
+    if (currentUser.role === UserRole.ADMIN) {
+        if (teacherId) {
+            userToUpdate.teacherId = teacherId;
+        }
+    }
+
+    userToUpdate.status = status;
+    return this.usersRepository.save(userToUpdate);
   }
 
-  async findAllPending(): Promise<User[]> {
-    return this.usersRepository.find({ where: { status: UserStatus.PENDING } });
+  async findAllPending(currentUser: User): Promise<User[]> {
+    if (currentUser.role === UserRole.ADMIN) {
+        return this.usersRepository.find({ where: { status: UserStatus.PENDING } });
+    } else if (currentUser.role === UserRole.TEACHER) {
+        return this.usersRepository.find({ where: { status: UserStatus.PENDING, role: UserRole.STUDENT } });
+    }
+    return [];
   }
 
   async findAllByRole(role: UserRole): Promise<User[]> {
