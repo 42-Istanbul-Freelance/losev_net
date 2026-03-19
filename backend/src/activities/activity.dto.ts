@@ -34,3 +34,18 @@ export class UpdateActivityStatusDto {
   @IsString()
   rejectionReason?: string;
 }
+
+import { ParticipantStatus } from './participant.entity';
+
+export class JoinActivityDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  activityId: number;
+}
+
+export class UpdateParticipantStatusDto {
+  @ApiProperty({ enum: ParticipantStatus })
+  @IsEnum(ParticipantStatus)
+  status: ParticipantStatus;
+}

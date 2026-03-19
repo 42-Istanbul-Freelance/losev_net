@@ -35,23 +35,14 @@ export class Activity {
   @Column('text')
   description: string;
 
-  @Column({ nullable: true })
-  imageUrl: string;
-
-  @Column({ nullable: true })
-  documentUrl: string;
-
   @Column({ type: 'simple-enum', enum: ActivityStatus, default: ActivityStatus.PENDING })
   status: ActivityStatus;
 
-  @Column({ nullable: true })
-  rejectionReason: string;
-
-  @ManyToOne(() => User, (user) => user.activities)
-  student: User;
+  @ManyToOne(() => User)
+  creator: User;
 
   @Column()
-  studentId: number;
+  creatorId: number;
 
   @CreateDateColumn()
   createdAt: Date;

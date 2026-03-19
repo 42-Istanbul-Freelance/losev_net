@@ -97,14 +97,14 @@ onMounted(fetchRankings)
 const activeRankings = computed(() => {
   if (activeTab.value === 'SCHOOLS') {
     return rawRankings.value.topSchools.map(s => ({
-      name: s.schoolName,
-      sub: `${s.city || 'Belirtilmemiş'}`,
+      name: s.school,
+      sub: ``,
       hours: s.totalHours
     }))
   } else {
     return rawRankings.value.topStudents.map(s => ({
-      name: s.fullName,
-      sub: `${s.schoolName} - ${s.grade || '-'}`,
+      name: s.name,
+      sub: `${s.school}`,
       hours: s.totalHours
     }))
   }

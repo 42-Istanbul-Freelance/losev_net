@@ -55,6 +55,14 @@ const router = createRouter({
           component: () => import('../views/teacher/Dashboard.vue')
         },
         {
+          path: 'activity-create',
+          component: () => import('../views/teacher/ActivityCreate.vue')
+        },
+        {
+          path: 'announcement-create',
+          component: () => import('../views/teacher/AnnouncementCreate.vue')
+        },
+        {
           path: 'approvals',
           component: () => import('../views/teacher/Approvals.vue')
         },

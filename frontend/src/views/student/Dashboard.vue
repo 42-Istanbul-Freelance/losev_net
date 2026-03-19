@@ -44,35 +44,34 @@
       </div>
     </div>
 
-    <!-- Progress Card -->
-    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="font-bold text-gray-900">Rozet İlerlemesi</h2>
-        <span class="text-sm font-medium text-losev-blue" v-if="nextBadgeThreshold > stats.totalHours">{{ (nextBadgeThreshold - stats.totalHours).toFixed(1) }} saat kaldı</span>
-        <span class="text-sm font-medium text-green-600" v-else>Tüm rozetler tamamlandı!</span>
-      </div>
-      <div class="w-full bg-gray-100 rounded-full h-4 mb-2">
-        <div class="bg-losev-blue h-4 rounded-full transition-all duration-500" :style="{ width: progressPercentage + '%' }"></div>
-      </div>
-      <div class="flex justify-between text-[10px] text-gray-400 font-bold uppercase tracking-wider">
-        <span>Başlangıç</span>
-        <span :class="{'text-losev-blue': stats.totalHours < 25}">Bronz (25s)</span>
-        <span :class="{'text-losev-blue': stats.totalHours >= 25 && stats.totalHours < 50}">Gümüş (50s)</span>
-        <span :class="{'text-losev-blue': stats.totalHours >= 50 && stats.totalHours < 100}">Altın (100s)</span>
-        <span :class="{'text-losev-blue': stats.totalHours >= 100}">Platin (200s)</span>
-      </div>
-    </div>
-
     <!-- Quick Actions -->
     <div class="grid grid-cols-2 gap-4">
-      <router-link to="/student/activity-add" class="bg-losev-blue text-white p-4 rounded-2xl flex flex-col items-center justify-center gap-2 shadow-lg shadow-losev-blue/20 active:scale-95 transition-transform">
-        <PlusCircle class="w-8 h-8" />
-        <span class="font-bold text-sm">Etkinlik Ekle</span>
+      <router-link to="/student/activities" class="bg-losev-blue text-white p-4 rounded-2xl flex flex-col items-center justify-center gap-2 shadow-lg shadow-losev-blue/20 active:scale-95 transition-transform">
+        <LayoutList class="w-8 h-8" />
+        <span class="font-bold text-sm">Etkinlik Listesi</span>
       </router-link>
-      <router-link to="/student/activities" class="bg-white text-gray-700 p-4 rounded-2xl flex flex-col items-center justify-center gap-2 border border-gray-200 active:scale-95 transition-transform">
-        <History class="w-8 h-8 text-losev-blue" />
-        <span class="font-bold text-sm">Geçmişim</span>
+      <router-link to="/student/profile" class="bg-white text-gray-700 p-4 rounded-2xl flex flex-col items-center justify-center gap-2 border border-gray-200 active:scale-95 transition-transform">
+        <UserIcon class="w-8 h-8 text-losev-blue" />
+        <span class="font-bold text-sm">Profilim</span>
       </router-link>
+    </div>
+
+    <!-- Announcements -->
+    <div>
+      <h2 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
+        <Megaphone class="w-5 h-5 text-losev-blue" />
+        Duyuru Panosu
+      </h2>
+      <div class="space-y-4">
+        <div v-for="ann in announcements" :key="ann.id" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
+          <div class="flex justify-between items-start mb-2">
+            <h3 class="font-bold text-gray-900">{{ ann.title }}</h3>
+            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{{ new Date(ann.createdAt).toLocaleDateString('tr-TR') }}</span>
+          </div>
+          <p class="text-sm text-gray-600">{{ ann.content }}</p>
+        </div>
+        <p v-if="announcements.length === 0" class="text-center text-sm text-gray-400 py-8">Henüz duyuru bulunmuyor.</p>
+      </div>
     </div>
 
     <!-- Badges Section -->
@@ -88,7 +87,6 @@
           <Award class="w-8 h-8" :class="stats.totalHours >= badge.threshold ? badge.color : 'text-gray-400'" />
         </div>
       </div>
-      <p v-if="stats.totalHours < 25" class="mt-4 text-center text-sm text-gray-400 italic">Henüz bir rozet kazanmadın. İlk adımını at!</p>
     </div>
   </div>
 </template>
@@ -102,9 +100,10 @@ import {
   Clock,
   Calendar,
   Target,
-  PlusCircle,
-  History,
-  Award
+  LayoutList,
+  User as UserIcon,
+  Award,
+  Megaphone
 } from 'lucide-vue-next'
 
 const authStore = useAuthStore()
@@ -114,6 +113,8 @@ const stats = ref({
   totalHours: 0,
   monthlyHours: 0
 })
+
+const announcements = ref([])
 
 const badges = [
   { id: 'bronz', threshold: 25, name: 'Bronz İnci', color: 'text-amber-600' },
@@ -129,18 +130,16 @@ const nextBadge = computed(() => {
 const nextBadgeName = computed(() => nextBadge.value.name)
 const nextBadgeThreshold = computed(() => nextBadge.value.threshold)
 
-const progressPercentage = computed(() => {
-  const current = stats.value.totalHours
-  const max = 200
-  return Math.min((current / max) * 100, 100)
-})
-
 onMounted(async () => {
   try {
-    const data = await api.get('/activities/my/stats')
-    stats.value = data
+    const [statsData, annData] = await Promise.all([
+      api.get('/activities/my/stats'),
+      api.get('/announcements')
+    ])
+    stats.value = statsData
+    announcements.value = annData
   } catch (err) {
-    console.error('Failed to fetch stats:', err)
+    console.error('Failed to fetch data:', err)
   }
 })
 </script>

@@ -93,8 +93,7 @@
           <div class="flex items-center gap-4">
             <span class="text-sm font-black text-gray-300 w-4">{{ index + 1 }}</span>
             <div>
-              <p class="font-bold text-sm text-gray-900">{{ school.schoolName }}</p>
-              <p class="text-[10px] text-gray-400 font-medium">{{ school.city || 'Belirtilmemiş' }}</p>
+              <p class="font-bold text-sm text-gray-900">{{ school.school }}</p>
             </div>
           </div>
           <p class="font-black text-losev-blue text-sm">{{ school.totalHours }}s</p>

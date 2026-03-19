@@ -1,14 +1,11 @@
-import { Controller, Post, Get, Patch, Body, Param, UseGuards, Request, UseInterceptors, UploadedFiles, ParseIntPipe } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiConsumes } from '@nestjs/swagger';
-import { FilesInterceptor } from '@nestjs/platform-express';
+import { Controller, Post, Get, Patch, Body, Param, UseGuards, Request, ParseIntPipe } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 import { UserRole } from '../users/user.entity';
 import { ActivitiesService } from './activities.service';
-import { CreateActivityDto, UpdateActivityStatusDto } from './activity.dto';
-import { diskStorage } from 'multer';
-import { extname, join } from 'path';
+import { CreateActivityDto, JoinActivityDto, UpdateParticipantStatusDto } from './activity.dto';
 
 @ApiTags('activities')
 @ApiBearerAuth()
@@ -18,40 +15,59 @@ export class ActivitiesController {
 
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.STUDENT)
-  @ApiOperation({ summary: 'Yeni faaliyet girişi' })
-  @UseInterceptors(FilesInterceptor('files', 2, {
-    storage: diskStorage({
-      // Use absolute path from cwd (/app in Docker)
-      destination: join(process.cwd(), 'uploads'),
-      filename: (req, file, cb) => {
-        const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
-        cb(null, `${randomName}${extname(file.originalname)}`);
-      }
-    })
-  }))
-  @ApiConsumes('multipart/form-data')
+  @Roles(UserRole.ADMIN, UserRole.TEACHER)
+  @ApiOperation({ summary: 'Yeni etkinlik oluştur (Admin/Öğretmen)' })
   async create(
     @Request() req,
-    @Body() createActivityDto: CreateActivityDto,
-    @UploadedFiles() files: Express.Multer.File[]
+    @Body() createActivityDto: CreateActivityDto
   ) {
-    const activityData: any = { ...createActivityDto };
-    if (files && files.length > 0) {
-      activityData.imageUrl = files[0].filename;
-      if (files.length > 1) {
-        activityData.documentUrl = files[1].filename;
-      }
-    }
-    return this.activitiesService.create(activityData, req.user);
+    return this.activitiesService.create(createActivityDto, req.user);
   }
 
-  @Get('my')
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Tüm etkinlikleri listele' })
+  async findAll() {
+    return this.activitiesService.findAll();
+  }
+
+  @Post('join')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.STUDENT)
-  @ApiOperation({ summary: 'Öğrencinin kendi faaliyetlerini listelemesi' })
-  async getMyActivities(@Request() req) {
-    return this.activitiesService.findByStudent(req.user.id);
+  @ApiOperation({ summary: 'Etkinliğe katılım bildir' })
+  async joinActivity(
+    @Request() req,
+    @Body() joinDto: JoinActivityDto
+  ) {
+    return this.activitiesService.joinActivity(joinDto.activityId, req.user);
+  }
+
+  @Get('my-participations')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.STUDENT)
+  @ApiOperation({ summary: 'Kendi katıldığım etkinlikleri listele' })
+  async getMyParticipations(@Request() req) {
+    return this.activitiesService.getMyParticipations(req.user.id);
+  }
+
+  @Get('pending-participants')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.TEACHER, UserRole.ADMIN)
+  @ApiOperation({ summary: 'Onay bekleyen katılımcılar (Öğretmen/Admin)' })
+  async getPendingParticipants(@Request() req) {
+    return this.activitiesService.getPendingParticipants(req.user);
+  }
+
+  @Patch('participant/:id/status')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.TEACHER, UserRole.ADMIN)
+  @ApiOperation({ summary: 'Katılımcı durumunu güncelle (Onay/Red)' })
+  async updateParticipantStatus(
+    @Request() req,
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateDto: UpdateParticipantStatusDto
+  ) {
+    return this.activitiesService.updateParticipantStatus(id, updateDto.status, req.user);
   }
 
   @Get('my/stats')
@@ -60,25 +76,6 @@ export class ActivitiesController {
   @ApiOperation({ summary: 'Öğrencinin kendi saat istatistikleri' })
   async getMyStats(@Request() req) {
     return this.activitiesService.getStatsByStudent(req.user.id);
-  }
-
-  @Get('pending')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.TEACHER, UserRole.ADMIN)
-  @ApiOperation({ summary: 'Onay bekleyen faaliyetler (Öğretmen/Admin)' })
-  async getPending(@Request() req) {
-    return this.activitiesService.findAllPending(req.user);
-  }
-
-  @Patch(':id/status')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.TEACHER, UserRole.ADMIN)
-  @ApiOperation({ summary: 'Faaliyet durumunu güncelle (Onay/Red)' })
-  async updateStatus(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateStatusDto: UpdateActivityStatusDto
-  ) {
-    return this.activitiesService.updateStatus(id, updateStatusDto.status, updateStatusDto.rejectionReason);
   }
 
   @Get('stats/global')
