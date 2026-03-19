@@ -27,21 +27,22 @@ export class UsersController {
 
   @Get('pending')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.ADMIN)
-  @ApiOperation({ summary: 'Onay bekleyen kullanıcıları listele (Admin)' })
-  async getPending() {
-    return this.usersService.findAllPending();
+  @Roles(UserRole.ADMIN, UserRole.TEACHER)
+  @ApiOperation({ summary: 'Onay bekleyen kullanıcıları listele (Admin/Öğretmen)' })
+  async getPending(@Request() req) {
+    return this.usersService.findAllPending(req.user);
   }
 
   @Patch(':id/status')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.ADMIN)
+  @Roles(UserRole.ADMIN, UserRole.TEACHER)
   @ApiOperation({ summary: 'Kullanıcı durumunu güncelle (Onay/Red)' })
   async updateStatus(
+    @Request() req,
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserStatusDto: UpdateUserStatusDto
   ) {
-    return this.usersService.updateStatus(id, updateUserStatusDto.status, updateUserStatusDto.teacherId);
+    return this.usersService.updateStatus(id, updateUserStatusDto.status, req.user, updateUserStatusDto.teacherId);
   }
 
   @Get('teachers')

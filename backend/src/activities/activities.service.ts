@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Activity, ActivityStatus } from './activity.entity';
+import { ActivityParticipant, ParticipantStatus } from './participant.entity';
 import { User, UserRole } from '../users/user.entity';
 
 @Injectable()
@@ -9,82 +10,131 @@ export class ActivitiesService {
   constructor(
     @InjectRepository(Activity)
     private activitiesRepository: Repository<Activity>,
+    @InjectRepository(ActivityParticipant)
+    private participantRepository: Repository<ActivityParticipant>,
   ) {}
 
   async create(activityData: Partial<Activity>, user: User): Promise<Activity> {
+    if (user.role === UserRole.STUDENT) {
+      throw new ForbiddenException('Öğrenciler etkinlik oluşturamaz.');
+    }
     const activity = this.activitiesRepository.create({
       ...activityData,
-      studentId: user.id,
+      creatorId: user.id,
+      status: ActivityStatus.APPROVED, // Admin/Öğretmen oluşturduğu için direkt onaylı
     });
     return this.activitiesRepository.save(activity);
   }
 
-  async findByStudent(studentId: number): Promise<Activity[]> {
+  async findAll(): Promise<Activity[]> {
     return this.activitiesRepository.find({
-      where: { studentId },
       order: { date: 'DESC' },
     });
   }
 
-  async findAllPending(user: User): Promise<Activity[]> {
-    const query = this.activitiesRepository.createQueryBuilder('activity')
-      .leftJoinAndSelect('activity.student', 'student')
-      .where('activity.status = :status', { status: ActivityStatus.PENDING });
+  async findOne(id: number): Promise<Activity> {
+    const activity = await this.activitiesRepository.findOne({ where: { id } });
+    if (!activity) {
+      throw new NotFoundException('Etkinlik bulunamadı.');
+    }
+    return activity;
+  }
+
+  async joinActivity(activityId: number, student: User): Promise<ActivityParticipant> {
+    const activity = await this.findOne(activityId);
+
+    const existing = await this.participantRepository.findOne({
+      where: { activityId, studentId: student.id }
+    });
+    if (existing) {
+      return existing;
+    }
+
+    const participant = this.participantRepository.create({
+      activityId,
+      studentId: student.id,
+      status: ParticipantStatus.PENDING,
+    });
+    return this.participantRepository.save(participant);
+  }
+
+  async getMyParticipations(studentId: number) {
+    return this.participantRepository.find({
+      where: { studentId },
+      relations: ['activity'],
+      order: { createdAt: 'DESC' }
+    });
+  }
+
+  async getPendingParticipants(user: User) {
+    const query = this.participantRepository.createQueryBuilder('participant')
+      .leftJoinAndSelect('participant.activity', 'activity')
+      .leftJoinAndSelect('participant.student', 'student')
+      .where('participant.status = :status', { status: ParticipantStatus.PENDING });
 
     if (user.role === UserRole.TEACHER) {
       query.andWhere('student.teacherId = :teacherId', { teacherId: user.id });
     }
 
-    return query.orderBy('activity.createdAt', 'ASC').getMany();
+    return query.getMany();
   }
 
-  async updateStatus(id: number, status: ActivityStatus, rejectionReason?: string): Promise<Activity> {
-    const activity = await this.activitiesRepository.findOne({ where: { id } });
-    if (!activity) {
-      throw new NotFoundException('Faaliyet bulunamadı.');
+  async updateParticipantStatus(participantId: number, status: ParticipantStatus, user: User) {
+    const participant = await this.participantRepository.findOne({
+      where: { id: participantId },
+      relations: ['student']
+    });
+    if (!participant) {
+      throw new NotFoundException('Katılım kaydı bulunamadı.');
     }
-    activity.status = status;
-    if (rejectionReason) {
-      activity.rejectionReason = rejectionReason;
+
+    if (user.role === UserRole.TEACHER && participant.student.teacherId !== user.id) {
+      throw new ForbiddenException('Sadece kendi öğrencilerinizi onaylayabilirsiniz.');
     }
-    return this.activitiesRepository.save(activity);
+
+    participant.status = status;
+    return this.participantRepository.save(participant);
   }
 
   async getStatsByStudent(studentId: number) {
-    const activities = await this.activitiesRepository.find({
-      where: { studentId, status: ActivityStatus.APPROVED },
+    const participations = await this.participantRepository.find({
+      where: { studentId, status: ParticipantStatus.APPROVED },
+      relations: ['activity'],
     });
-    const totalHours = activities.reduce((sum, activity) => sum + activity.hours, 0);
+
+    const totalHours = participations.reduce((sum, p) => sum + p.activity.hours, 0);
 
     const now = new Date();
     const currentMonth = now.getMonth();
     const currentYear = now.getFullYear();
 
-    const monthlyHours = activities
-      .filter((a) => {
-        const d = new Date(a.date);
+    const monthlyHours = participations
+      .filter((p) => {
+        const d = new Date(p.activity.date);
         return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
       })
-      .reduce((sum, activity) => sum + activity.hours, 0);
+      .reduce((sum, p) => sum + p.activity.hours, 0);
 
     return {
       totalHours,
       monthlyHours,
-      activityCount: activities.length,
+      activityCount: participations.length,
     };
   }
 
   async getGlobalStats() {
-    const totalHours = await this.activitiesRepository
-      .createQueryBuilder('activity')
-      .where('activity.status = :status', { status: ActivityStatus.APPROVED })
+    const totalHours = await this.participantRepository
+      .createQueryBuilder('participant')
+      .innerJoin('participant.activity', 'activity')
+      .where('participant.status = :status', { status: ParticipantStatus.APPROVED })
       .select('SUM(activity.hours)', 'total')
       .getRawOne();
 
-    const statsByCity = await this.activitiesRepository
-      .createQueryBuilder('activity')
-      .innerJoin('activity.student', 'student')
-      .where('activity.status = :status', { status: ActivityStatus.APPROVED })
+    const statsByCity = await this.participantRepository
+      .createQueryBuilder('participant')
+      .innerJoin('participant.activity', 'activity')
+      .innerJoin('participant.student', 'student')
+      .where('participant.status = :status', { status: ParticipantStatus.APPROVED })
       .select('student.city', 'city')
       .addSelect('SUM(activity.hours)', 'hours')
       .groupBy('student.city')
@@ -100,10 +150,11 @@ export class ActivitiesService {
   }
 
   async getRankings() {
-    const topStudents = await this.activitiesRepository
-      .createQueryBuilder('activity')
-      .innerJoin('activity.student', 'student')
-      .where('activity.status = :status', { status: ActivityStatus.APPROVED })
+    const topStudents = await this.participantRepository
+      .createQueryBuilder('participant')
+      .innerJoin('participant.activity', 'activity')
+      .innerJoin('participant.student', 'student')
+      .where('participant.status = :status', { status: ParticipantStatus.APPROVED })
       .select('student.fullName', 'name')
       .addSelect('student.schoolName', 'school')
       .addSelect('SUM(activity.hours)', 'totalHours')
@@ -112,10 +163,11 @@ export class ActivitiesService {
       .limit(10)
       .getRawMany();
 
-    const topSchools = await this.activitiesRepository
-      .createQueryBuilder('activity')
-      .innerJoin('activity.student', 'student')
-      .where('activity.status = :status', { status: ActivityStatus.APPROVED })
+    const topSchools = await this.participantRepository
+      .createQueryBuilder('participant')
+      .innerJoin('participant.activity', 'activity')
+      .innerJoin('participant.student', 'student')
+      .where('participant.status = :status', { status: ParticipantStatus.APPROVED })
       .select('student.schoolName', 'school')
       .addSelect('SUM(activity.hours)', 'totalHours')
       .groupBy('student.schoolName')
