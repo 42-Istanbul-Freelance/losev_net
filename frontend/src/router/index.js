@@ -32,10 +32,6 @@ const router = createRouter({
           component: () => import('../views/student/Dashboard.vue')
         },
         {
-          path: 'activity-add',
-          component: () => import('../views/student/ActivityForm.vue')
-        },
-        {
           path: 'activities',
           component: () => import('../views/student/ActivityList.vue')
         },
