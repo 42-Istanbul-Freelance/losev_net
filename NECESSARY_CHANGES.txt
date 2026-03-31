@@ -1,0 +1,19 @@
+Amaç
+Projenin LÖSEV operasyonel ihtiyaçlarına ve GONULLU_TAKIP.md referans dökümanındaki MVP kısıtlamalarına uygun hale getirilmesi; rol hiyerarşisinin düzenlenmesi ve Docker yapılandırmasının tamamlanması.
+İş Listesi (Task List)
+Rol ve Yetki Yönetimi
+• Etkinlik Oluşturma Yetkisi: Yalnızca Admin ve Öğretmen rolleri etkinlik oluşturabilmeli. Öğrencilerin yetkileri kesinlikle kaldırılmalı.
+Onay (Yoklama) Mekanizması: Öğrenci katılım onayı süreci, ilgili Öğretmen veya Admin onayına bağlanacak şekilde güncellenmeli.
+• Kayıt ve Onay Zinciri: 
+• Öğrenci kayıtları -> Admin veya Öğretmen onayı.
+• Öğretmen kayıtları -> YALNIZCA Admin onayı.
+Sosyal Etkileşim Kısıtlamaları
+• Fotoğraf paylaşımı, yorum yapma, forum ve timeline/feed özelliklerinin kaldırılması.
+Sistemin sadece 30 saatlik gönüllülük takibi ve tek yönlü duyuru panosu odaklı hale getirilmesi.
+Teknik Gereksinimler ve Docker
+• Docker Yapılandırması: Projenin tek komutla ayağa kalkması için Dockerfile ve docker-compose.yml dosyalarının eklenmesi/düzeltilmesi.
+Standalone Yapı: Projenin LÖSEV ana CRM'inden bağımsız, izole bir veritabanı ile çalıştığının doğrulanması.
+Teknik Bilgiler
+• Referans: GONULLU_TAKIP.md
+Notlar
+• Test süreçlerinin hızlanması için Docker tarafındaki veritabanı bağlantı ayarlarının (environment variables) eksiksiz yapılandırılması gerekmektedir.
