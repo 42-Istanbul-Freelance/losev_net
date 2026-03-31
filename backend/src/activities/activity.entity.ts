@@ -38,6 +38,9 @@ export class Activity {
   @Column({ type: 'simple-enum', enum: ActivityStatus, default: ActivityStatus.PENDING })
   status: ActivityStatus;
 
+  @Column({ nullable: true })
+  code: string;
+
   @ManyToOne(() => User)
   creator: User;
 

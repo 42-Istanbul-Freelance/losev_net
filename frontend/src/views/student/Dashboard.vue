@@ -12,34 +12,27 @@
     </div>
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
         <div class="bg-blue-100 p-3 rounded-xl text-blue-600">
           <Clock class="w-6 h-6" />
         </div>
-        <div>
-          <p class="text-sm text-gray-500 font-medium">Toplam Saat</p>
-          <p class="text-2xl font-bold">{{ stats.totalHours.toFixed(1) }} <span class="text-sm font-normal text-gray-400">/ {{ nextBadgeThreshold }}h</span></p>
+        <div class="flex-1">
+          <p class="text-sm text-gray-500 font-medium">Toplam Gönüllülük Saati</p>
+          <p class="text-2xl font-bold">{{ stats.totalHours.toFixed(1) }} <span class="text-sm font-normal text-gray-400">/ 30.0h</span></p>
         </div>
       </div>
 
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
-        <div class="bg-green-100 p-3 rounded-xl text-green-600">
-          <Calendar class="w-6 h-6" />
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-center">
+        <div class="flex justify-between items-end mb-2">
+          <p class="text-sm text-gray-500 font-medium">İnci Sertifikası Hedefi</p>
+          <p class="text-xs font-bold text-losev-blue">{{ Math.min(100, (stats.totalHours / 30 * 100)).toFixed(0) }}%</p>
         </div>
-        <div>
-          <p class="text-sm text-gray-500 font-medium">Bu Ay</p>
-          <p class="text-2xl font-bold">{{ stats.monthlyHours.toFixed(1) }} <span class="text-sm font-normal text-gray-400">saat</span></p>
-        </div>
-      </div>
-
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
-        <div class="bg-purple-100 p-3 rounded-xl text-purple-600">
-          <Target class="w-6 h-6" />
-        </div>
-        <div>
-          <p class="text-sm text-gray-500 font-medium">Sıradaki Hedef</p>
-          <p class="text-2xl font-bold text-losev-blue">{{ nextBadgeName }}</p>
+        <div class="w-full bg-gray-100 h-3 rounded-full overflow-hidden">
+          <div
+            class="bg-losev-blue h-full transition-all duration-1000"
+            :style="{ width: `${Math.min(100, (stats.totalHours / 30 * 100))}%` }"
+          ></div>
         </div>
       </div>
     </div>
@@ -78,13 +71,17 @@
     <div>
       <h2 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
         <Award class="w-5 h-5 text-losev-yellow" />
-        Rozetlerim
+        Sertifikalarım
       </h2>
-      <div class="grid grid-cols-4 gap-4">
-        <div v-for="badge in badges" :key="badge.id"
-             class="aspect-square bg-gray-100 rounded-2xl flex items-center justify-center border-2 border-gray-200"
-             :class="{'grayscale opacity-40 border-dashed': stats.totalHours < badge.threshold, 'bg-white border-solid shadow-sm': stats.totalHours >= badge.threshold}">
-          <Award class="w-8 h-8" :class="stats.totalHours >= badge.threshold ? badge.color : 'text-gray-400'" />
+      <div class="grid grid-cols-2 gap-4">
+        <div
+             class="p-4 rounded-2xl flex items-center gap-4 border-2"
+             :class="{'bg-gray-50 grayscale opacity-40 border-dashed border-gray-200': stats.totalHours < 30, 'bg-white border-solid border-losev-yellow shadow-sm': stats.totalHours >= 30}">
+          <Award class="w-10 h-10" :class="stats.totalHours >= 30 ? 'text-losev-yellow' : 'text-gray-400'" />
+          <div>
+            <p class="font-bold text-sm" :class="stats.totalHours >= 30 ? 'text-gray-900' : 'text-gray-400'">İnci Sertifikası</p>
+            <p class="text-xs text-gray-500">{{ stats.totalHours >= 30 ? 'Hak Kazandınız' : '30 Saat Hedefi' }}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -116,19 +113,6 @@ const stats = ref({
 
 const announcements = ref([])
 
-const badges = [
-  { id: 'bronz', threshold: 25, name: 'Bronz İnci', color: 'text-amber-600' },
-  { id: 'gumus', threshold: 50, name: 'Gümüş İnci', color: 'text-gray-400' },
-  { id: 'altin', threshold: 100, name: 'Altın İnci', color: 'text-yellow-500' },
-  { id: 'platin', threshold: 200, name: 'Platin İnci', color: 'text-blue-400' },
-]
-
-const nextBadge = computed(() => {
-  return badges.find(b => stats.value.totalHours < b.threshold) || badges[badges.length - 1]
-})
-
-const nextBadgeName = computed(() => nextBadge.value.name)
-const nextBadgeThreshold = computed(() => nextBadge.value.threshold)
 
 onMounted(async () => {
   try {

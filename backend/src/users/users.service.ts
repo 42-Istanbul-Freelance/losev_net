@@ -42,8 +42,17 @@ export class UsersService {
       if (userToUpdate.role !== UserRole.STUDENT) {
         throw new ForbiddenException('Öğretmenler sadece öğrencileri onaylayabilir.');
       }
-      // Note: If teacher is approving, they become the coordinator for that student
+      // Teachers can only approve their own students OR students without a teacher assigned yet
+      if (userToUpdate.teacherId && userToUpdate.teacherId !== currentUser.id) {
+        throw new ForbiddenException('Sadece kendi öğrencilerinizi onaylayabilirsiniz.');
+      }
       userToUpdate.teacherId = currentUser.id;
+    }
+
+    if (currentUser.role === UserRole.ADMIN) {
+      // Admins can approve anyone, including Teachers
+    } else if (userToUpdate.role === UserRole.TEACHER) {
+        throw new ForbiddenException('Öğretmen kayıtları sadece Admin tarafından onaylanabilir.');
     }
 
     if (currentUser.role === UserRole.ADMIN) {

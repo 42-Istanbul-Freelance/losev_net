@@ -41,30 +41,6 @@
       </div>
     </div>
 
-    <!-- Map Preview Placeholder -->
-    <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="font-bold text-gray-900 flex items-center gap-2">
-          <Map class="w-5 h-5 text-losev-blue" />
-          Şehir Bazlı Dağılım
-        </h3>
-      </div>
-
-      <div v-if="loading" class="flex justify-center py-12">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-losev-blue"></div>
-      </div>
-
-      <div v-else class="mt-6 flex flex-wrap justify-between items-center text-center gap-4">
-        <div v-for="city in topCities" :key="city.name" class="flex-1 min-w-[120px]">
-          <p class="text-xs font-bold text-gray-400 mb-1 uppercase tracking-widest">{{ city.name }}</p>
-          <p class="text-lg font-black text-gray-900">{{ city.hours }}s</p>
-          <div class="h-1 bg-gray-100 rounded-full mt-2 mx-4 overflow-hidden">
-             <div class="bg-losev-blue h-full rounded-full" :style="{ width: city.percent + '%' }"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- User Approvals CTA -->
     <router-link to="/admin/user-approvals" class="bg-losev-yellow p-6 rounded-3xl shadow-lg shadow-losev-yellow/20 flex items-center justify-between group active:scale-[0.98] transition-all">
       <div class="flex items-center gap-4">
@@ -79,27 +55,6 @@
       <ArrowRight class="w-6 h-6 text-white group-hover:translate-x-1 transition-transform" />
     </router-link>
 
-    <!-- Rankings Preview -->
-    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-      <div class="p-6 border-b border-gray-50 flex items-center justify-between">
-        <h3 class="font-bold text-gray-900">Lider Okullar</h3>
-        <router-link to="/admin/rankings" class="text-losev-blue text-xs font-bold flex items-center gap-1">
-          Tümünü Gör
-          <ArrowRight class="w-3 h-3" />
-        </router-link>
-      </div>
-      <div class="divide-y divide-gray-50">
-        <div v-for="(school, index) in topSchools" :key="index" class="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
-          <div class="flex items-center gap-4">
-            <span class="text-sm font-black text-gray-300 w-4">{{ index + 1 }}</span>
-            <div>
-              <p class="font-bold text-sm text-gray-900">{{ school.school }}</p>
-            </div>
-          </div>
-          <p class="font-black text-losev-blue text-sm">{{ school.totalHours }}s</p>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 

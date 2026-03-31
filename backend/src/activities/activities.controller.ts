@@ -39,7 +39,7 @@ export class ActivitiesController {
     @Request() req,
     @Body() joinDto: JoinActivityDto
   ) {
-    return this.activitiesService.joinActivity(joinDto.activityId, req.user);
+    return this.activitiesService.joinActivity(joinDto.activityId, joinDto.code, req.user);
   }
 
   @Get('my-participations')

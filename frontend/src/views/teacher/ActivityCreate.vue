@@ -70,6 +70,18 @@
             placeholder="Etkinlik detayları..."
           ></textarea>
         </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Katılım Kodu</label>
+          <input
+            v-model="form.code"
+            type="text"
+            required
+            class="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-losev-blue focus:border-transparent outline-none transition-all"
+            placeholder="Örn: LOSEV2024"
+          />
+          <p class="mt-1 text-xs text-gray-500">Öğrencilerin bu etkinliğe katılabilmek için bu kodu girmesi gerekecektir.</p>
+        </div>
       </div>
 
       <button
@@ -102,7 +114,8 @@ const form = reactive({
   date: new Date().toISOString().split('T')[0],
   type: '',
   hours: null,
-  description: ''
+  description: '',
+  code: ''
 })
 
 const handleSubmit = async () => {
