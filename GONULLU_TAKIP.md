@@ -1,174 +1,42 @@
-# LÖSEV İNCİ GÖNÜLLÜLÜK TAKİP SİSTEMİ
+# LÖSEV Etkinlik ve Gönüllü Takip Platformu (42 Intra Benzeri) Proje İhtiyaç Dokümanı
 
-Bu doküman, LÖSEV tarafından paylaşılan örnek slayt içeriği temel alınarak hazırlanmış bir referans metindir.
-Etkinlikte bu projeyi seçen ekipler, bu çerçeve üzerinden ilerleyebilir.
+## 1. Projeye Neden İhtiyaç Var? (Arka Plan ve Mevcut Durum)
+LÖSEV'in sahadaki operasyonlarının ve farkındalık faaliyetlerinin merkezinde çok büyük ve değerli bir **"Gönüllü"** ağı yer almaktadır. LÖSEV, bu gönüllü topluluğunu organize etmek, motive etmek ve emeklerini taçlandırmak amacıyla çeşitli konferanslar, seminerler ve saha faaliyetleri düzenlemektedir. 
 
-## Proje Özeti
+Gönüllülerin bu etkinliklere katılım süreleri toplanmakta ve toplamda **30 saatlik katılım** gösteren gönüllülere, eğitim ve kariyer hayatlarında referans olabilmesi adına **resmi katılım/gönüllülük sertifikası** verilmektedir.
 
-LÖSEV İnci öğrencilerinin sosyal sorumluluk çalışmalarını kayıt altına alan, doğrulayan ve raporlayan bir takip sistemi fikridir.
+## 2. Yaşanan Problemler ve Operasyonel Yükler
+Mevcut durumda etkinlik koordinatörleri aşağıdaki çok ciddi operasyonel darboğazlarla mücadele etmektedir:
 
-## Projenin Amacı
+- **Manuel ve Hataya Açık Yoklama Süreci:** Farklı lokasyonlarda gerçekleşen organizasyonlara gelen yüzlerce gönüllünün yoklaması; imza listeleri, elden dolaşan kağıtlar veya anlık Excel/Whatsapp listeleri üzerinden tutulmaktadır. Kimin hangi etkinliğe katılıp katılmadığını teyit etmek kaotik bir süreçtir.
+- **Saat Takibinin İmkansızlığı (Kilit Problem):** LÖSEV tarafının belirttiği ana pürüz şudur: *"Bütün katılımcıların kaç saat konferansa katıldıklarını takip etmek çok zor oluyordu."* Bir kullanıcının aylara yayılmış farklı etkinliklerde topladığı bu kredi (saat) verilerinin tek bir merkezde manuel hesaplanması operasyonel bir kabustur.
+- **Şeffaflık ve Veri Yönetimi Eksikliği:** 
+  - Gönüllü (Öğrenci) kendi profiline girip *"Ben 15 saat daha etkinliğe katılırsam sertifikamı alacağım, geçmişte şunlara katıldım"* diyememektedir. 
+  - Yöneticiler *"Bugün itibariyle 30 barajını doldurup sertifika hak eden kimler var?"* sorusunun cevabına manuel veri yığınlarını incelemeden ulaşamamaktadır.
 
-Sistemin hedefi:
+## 3. Çözüm: Merkezi ve Dijital "Intra" Benzeri Etkinlik Platformu
+Yöneticilerin etkinlik (konferans vb.) ilanlarını açabildiği, katılımcıların bu etkinliklere tek tıkla **kayıt (RSVP)** olduğu, etkinlik günü basit bir dijital doğrulama ile etkinlik saatlerinin **otomatik olarak** katılımcının bakiyesine yansıdığı merkezi bir platform geliştirmek. 
 
-- Sosyal sorumluluk çalışmalarını düzenli takip etmek
-- Gönüllülük saatlerini kayıt altına almak
-- Okul bazlı performans ölçümü yapmak
-- Türkiye geneli etki analizi oluşturmak
-- Üniversite başvurularında kullanılabilecek dijital gönüllülük dokümanı üretmek
+---
 
-## Hedef Kitle
+## 4. Temel Ürün Beklentileri ve Roller
+1. **Öğretmen / Etkinlik Yöneticisi:** Etkinlikleri (adı, yeri, süresi) oluşturur. Öğrencilerin katılımını dijital olarak onaylar veya yönetir. Herkesin toplam katılım saatini ve konferans sicilini tablolar halinde görüntüleyebilir.
+2. **Öğrenci / Gönüllü:** Yaklaşan etkinlikleri görür, başvuru yapar. Kod girerek katılımını sisteme işletir ve 30 saatine ne kadar kaldığını profilinden takip eder.
 
-- Ortaokul öğrencileri
-- Lise öğrencileri
-- Okul koordinatör öğretmenleri
-- Genel merkez raporlama birimi
+## 5. Kesin Sınırlar, Arayüz ve Rol Hiyerarşisi (Toplantı Kararları)
+Projenin LÖSEV'in sahadaki işleyişine uygun olması için aşağıdaki kurallar **istisnasız** uygulanmalıdır:
 
-Tasarımın bu farklı kullanıcı bakışlarını desteklemesi beklenir.
+1. **Sosyal Etkileşim (Mesajlaşma/Yorum) Yasağı:** Platform bir sosyal medya veya mesajlaşma uygulaması değildir. Öğrencilerin bir gönderinin altına yorum yapması, fotoğraf paylaşması (feed akışı) **istenmemektedir**. Arayüz; 42 Intra'ya benzer şekilde sadece yaklaşan etkinliklerin (slider/liste formatında) görüldüğü duyuru odaklı bir yapıda geliştirilmelidir.
+2. **Etkinlik Açma Yetkisi Sınırı:** Etkinlik (konferans, okul ziyareti vb.) oluşturma yetkisi **sadece** Adminler (LÖSEV Genel Merkez) ve sistemde yetkili Öğretmenlerdedir. Öğrenciler (Gönüllüler) sistemde kesinlikle etkinlik oluşturamaz.
+3. **Sisteme Kayıt ve Yetki Hiyerarşisi:**
+   - **Admin Hesapları:** Sisteme sadece yine en tepedeki başka bir Admin tarafından yetkilendirilerek dahil edilebilir.
+   - **Öğretmen Hesapları:** Sisteme dahil olan öğretmenlerin hesap onayları (authorize) **sadece Adminler** tarafından verilebilir.
+   - **Öğrenci (Gönüllü) Hesapları:** Kayıt olan bir gönüllünün yetkilendirilmesi ve onayı hem **Adminler** hem de **Öğretmenler** tarafından yapılabilir.
 
-## Sistemin Ana Yapısı
+## 🛠 Değerlendirme (Review) Süreci İçin Zorunlu Kurallar (MVP Kısıtlamaları)
+Öğrenci projelerinin LÖSEV beklentisini doğru karşılayıp karşılamadığını hızlıca test edebilmek için geliştiricilerin uyması gereken katı sınırlar:
 
-### 1) Öğrenci Giriş ve Profil Alanı
-
-Öğrenci sisteme giriş yaptığında aşağıdaki bilgiler alınabilir:
-
-- Ad Soyad
-- T.C. Kimlik No (opsiyonel, KVKK uygunluğu gözetilerek)
-- Okul adı
-- İl/ilçe
-- Sınıf
-- GSM
-- E-posta
-- Koordinatör öğretmen adı
-
-### 2) Faaliyet Giriş Alanı
-
-Öğrenci, gerçekleştirdiği gönüllülük faaliyetini sisteme ekleyebilir:
-
-- Etkinlik tarihi
-- Etkinlik türü
-- Harcanan saat
-- Kısa açıklama
-- Fotoğraf yükleme
-- Belge yükleme
-
-Etkinlik türü örnekleri:
-
-- Seminer
-- Stant
-- Bağış
-- Kermes
-- Kamuoyu bilinçlendirme
-- Sosyal medya çalışması
-- Farkındalık etkinliği
-
-### 3) Saat Takip Alanı
-
-Sistem aşağıdaki değerleri otomatik hesaplayabilir:
-
-- Toplam gönüllülük saati
-- Aylık saat
-- Yıllık saat
-- Hedef saat (30 veya 40 saat gibi)
-
-## Örnek Yol Haritası (Zorunlu Değil)
-
-Bu bölüm sadece fikir vermesi için eklenmiştir. Ekipler kendi planını oluşturabilir.
-
-1. Adım: Rol ve veri modelini netleştirin
-
-- Öğrenci, öğretmen ve genel merkez rollerini belirleyin
-- Hangi bilgilerin zorunlu/opsiyonel olacağını tanımlayın
-- Faaliyet, saat ve onay verilerinin temel yapısını çıkarın
-
-2. Adım: Öğrenci tarafını geliştirin
-
-- Profil formu
-- Faaliyet ekleme formu
-- Saat takip ekranı (toplam, aylık, yıllık)
-
-3. Adım: Öğretmen panelini geliştirin
-
-- Etkinlik onay/reddetme akışı
-- Gerekirse düzenleme notu ekleme
-- Okul bazlı özet görünümü
-
-4. Adım: Genel merkez ve raporlama
-
-- Okul/il bazlı temel istatistikler
-- En aktif öğrenci/okul listeleri
-- Grafik veya tablo ile özet ekranı
-
-5. Adım: Sertifika ve demo hazırlığı
-
-- Saate bağlı rozet mantığını ekleyin
-- Kısa bir uçtan uca demo senaryosu hazırlayın
-
-## Teknoloji Alternatifleri (Zorunlu Değil)
-
-Bu önerilerden birini seçebilir veya farklı bir teknoloji kullanabilirsiniz.
-
-- Ön yüz (web): React veya Vue veya Next.js
-- Arka yüz (API): Node.js (Express/NestJS) veya Python (FastAPI/Django)
-- Veri tabanı: PostgreSQL veya MySQL veya SQLite
-- Kimlik doğrulama: Firebase Auth veya Supabase Auth veya JWT tabanlı giriş
-- Dosya yükleme: Supabase Storage veya Firebase Storage veya Cloudinary
-- Grafik/raporlama: Chart.js veya ECharts
-
-## Öğretmen Paneli
-
-Koordinatör öğretmen için önerilen işlevler:
-
-- Öğrencinin girdiği etkinlikleri onaylama
-- Gerekirse düzenleme talep etme
-- Okul bazlı toplam saat raporunu görme
-- Okul performans grafiğini inceleme
-
-## Genel Merkez Takip Alanı
-
-Kurumsal ölçekte üretilebilecek çıktılar:
-
-- Okul bazlı sıralama
-- İl bazlı etki haritası
-- Toplam gönüllü saati
-- En aktif 10 öğrenci
-- En aktif 10 okul
-- Aylık faaliyet dağılım grafiği
-- Etkinlik türüne göre istatistik
-
-## Dijital Sertifika Sistemi
-
-Toplam saat üzerinden rozet/sertifika kurgusu:
-
-- 25 saat: Bronz İnci
-- 50 saat: Gümüş İnci
-- 100 saat: Altın İnci
-- 200+ saat: Platin İnci Lideri
-
-Bu rozetler öğrenci profilinde görünür hale getirilebilir.
-
-## Okul Performans Rozetleri
-
-- İnci Dostu Okul
-- Sosyal Etki Lideri Okul
-- Yılın En Aktif İnci Okulu
-
-Temel amaç rekabet değil, motivasyondur.
-
-## Güvenlik ve KVKK
-
-Çocuk verisi işlendiği için güvenlik önceliklidir. Tasarımda:
-
-- Öğrenci verileri güvenli ve şifreli şekilde saklanmalı
-- Fotoğraf yüklemeleri onay mekanizmasına bağlı olmalı
-- Veli dijital izin süreci düşünülmeli
-- Veriler yalnızca LÖSEV amacıyla kullanılmalı
-
-## Raporlama
-
-Sistem, aşağıdaki türde çıktılar üretebilir:
-
-- "İstanbul Avrupa İnci öğrencileri toplam ... saat gönüllülük yaptı"
-- Türkiye geneli toplam gönüllülük saati
-- En çok yapılan faaliyet türü
-- Yıllık etki özeti
+1. **İzole ve Dışa Bağımsız (Standalone):** Bu sistem şimdilik LÖSEV'in ana otomasyonlarına veya CRM'lerine entegre edilmeyecektir. Tamamen kendi veritabanını kullanan kapalı ve bağımsız bir yapı tasarlanmalıdır.
+2. **Basit "Yoklama Katılım Kodu" Yöntemi:** Tüm kullanıcıların kameralarından QR kod okutması evaluasyon aşamasında karmaşa yaratabilir. Çözüm: Yönetici etkinlik günü için sistemden "LÖSEV42" gibi spesifik bir kod veya bir onay linki oluşturur, öğrenciler hesaplarındaki ilgili alana etkinliğin kodunu girerek saatlerini bakiyelerine eklerler.
+3. **Seed Data (Dolu Sistem):** Sistem ayağa kaldırıldığında test edilebilmesi için; en az 1 Yönetici hesabı, 3 Öğrenci hesabı, geçmişte yapılmış 2 etkinlik (saatleri dağıtılmış) ve yaklaşan 1 etkinlik sistemde **hazır (seed script ile oluşturulmuş)** bulunmalıdır.
+4. **Tek Komutla Dağıtım:** Çevresel uyumsuzluklardan kaçınmak için tüm projeler **Docker (`docker-compose up`)** yapılandırmasına sahip olmalı, veritabanı ve sunucu tek komutta test edenin karşısına gelmelidir.
