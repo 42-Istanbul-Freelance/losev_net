@@ -97,24 +97,37 @@ export async function seedData(dataSource: DataSource) {
 
   // 5. Create Activities
   const activity1 = activityRepository.create({
-    date: new Date().toISOString().split('T')[0],
+    date: '2024-03-01',
     type: ActivityType.SEMINAR,
     hours: 2.5,
-    description: 'LÖSEV Farkındalık Semineri',
+    description: 'Geçmiş LÖSEV Farkındalık Semineri',
     status: ActivityStatus.APPROVED,
     creatorId: admin.id,
+    code: 'LOSEV01',
   });
   await activityRepository.save(activity1);
 
   const activity2 = activityRepository.create({
-    date: new Date().toISOString().split('T')[0],
+    date: '2024-03-15',
     type: ActivityType.STAND,
     hours: 5,
-    description: 'AVM Bilgilendirme Standı',
+    description: 'Geçmiş AVM Bilgilendirme Standı',
     status: ActivityStatus.APPROVED,
     creatorId: teacher.id,
+    code: 'LOSEV02',
   });
   await activityRepository.save(activity2);
+
+  const upcomingActivity = activityRepository.create({
+    date: '2025-05-20',
+    type: ActivityType.AWARENESS_EVENT,
+    hours: 3.0,
+    description: 'Gelecek LÖSEV Koşusu',
+    status: ActivityStatus.APPROVED,
+    creatorId: admin.id,
+    code: 'LOSEV2025',
+  });
+  await activityRepository.save(upcomingActivity);
 
   // 6. Create Participations
   await participantRepository.save(participantRepository.create({
