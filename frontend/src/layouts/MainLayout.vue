@@ -79,18 +79,19 @@ const navItems = computed(() => {
   if (role.value === 'TEACHER') {
     return [
       { path: '/teacher/dashboard', label: 'Özet', icon: LayoutDashboard },
+      { path: '/teacher/activity-create', label: 'Ekle', icon: PlusCircle },
       { path: '/teacher/approvals', label: 'Onaylar', icon: CheckCircle },
       { path: '/teacher/profile', label: 'Profil', icon: User },
     ]
   } else if (role.value === 'ADMIN') {
     return [
       { path: '/admin/dashboard', label: 'Dashboard', icon: BarChart3 },
+      { path: '/admin/user-approvals', label: 'Onaylar', icon: CheckCircle },
       { path: '/admin/rankings', label: 'Sıralama', icon: Trophy },
     ]
   } else {
     return [
       { path: '/student/dashboard', label: 'Özet', icon: LayoutDashboard },
-      { path: '/student/activity-add', label: 'Ekle', icon: PlusCircle },
       { path: '/student/activities', label: 'Geçmiş', icon: History },
       { path: '/student/profile', label: 'Profil', icon: User },
     ]
