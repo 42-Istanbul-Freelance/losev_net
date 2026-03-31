@@ -116,12 +116,15 @@ const fetchData = async () => {
 }
 
 const joinActivity = async (activityId) => {
+  const code = prompt('Lütfen bu etkinlik için size verilen katılım kodunu giriniz:')
+  if (!code) return
+
   joiningId.value = activityId
   try {
-    await api.post('/activities/join', { activityId })
+    await api.post('/activities/join', { activityId, code })
     await fetchData()
   } catch (err) {
-    alert(err.message || 'Katılım bildirilemedi.')
+    alert(err.message || 'Katılım bildirilemedi. Kodun doğru olduğundan emin olun.')
   } finally {
     joiningId.value = null
   }

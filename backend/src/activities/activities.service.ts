@@ -40,8 +40,12 @@ export class ActivitiesService {
     return activity;
   }
 
-  async joinActivity(activityId: number, student: User): Promise<ActivityParticipant> {
+  async joinActivity(activityId: number, code: string, student: User): Promise<ActivityParticipant> {
     const activity = await this.findOne(activityId);
+
+    if (activity.code !== code) {
+      throw new ForbiddenException('Geçersiz katılım kodu.');
+    }
 
     const existing = await this.participantRepository.findOne({
       where: { activityId, studentId: student.id }
@@ -88,8 +92,13 @@ export class ActivitiesService {
       throw new NotFoundException('Katılım kaydı bulunamadı.');
     }
 
-    if (user.role === UserRole.TEACHER && participant.student.teacherId !== user.id) {
-      throw new ForbiddenException('Sadece kendi öğrencilerinizi onaylayabilirsiniz.');
+    if (user.role === UserRole.TEACHER) {
+      if (participant.student.role !== UserRole.STUDENT) {
+        throw new ForbiddenException('Öğretmenler sadece öğrencileri onaylayabilir.');
+      }
+      if (participant.student.teacherId !== user.id) {
+        throw new ForbiddenException('Sadece kendi öğrencilerinizi onaylayabilirsiniz.');
+      }
     }
 
     participant.status = status;

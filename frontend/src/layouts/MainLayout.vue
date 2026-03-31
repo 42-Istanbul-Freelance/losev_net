@@ -87,7 +87,6 @@ const navItems = computed(() => {
     return [
       { path: '/admin/dashboard', label: 'Dashboard', icon: BarChart3 },
       { path: '/admin/user-approvals', label: 'Onaylar', icon: CheckCircle },
-      { path: '/admin/rankings', label: 'Sıralama', icon: Trophy },
     ]
   } else {
     return [

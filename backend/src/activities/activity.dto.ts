@@ -22,6 +22,11 @@ export class CreateActivityDto {
   @IsNotEmpty({ message: 'Açıklama boş olamaz.' })
   @IsString()
   description: string;
+
+  @ApiProperty()
+  @IsNotEmpty({ message: 'Katılım kodu boş olamaz.' })
+  @IsString()
+  code: string;
 }
 
 export class UpdateActivityStatusDto {
@@ -42,6 +47,11 @@ export class JoinActivityDto {
   @IsNotEmpty()
   @IsNumber()
   activityId: number;
+
+  @ApiProperty()
+  @IsNotEmpty({ message: 'Katılım kodu boş olamaz.' })
+  @IsString()
+  code: string;
 }
 
 export class UpdateParticipantStatusDto {
