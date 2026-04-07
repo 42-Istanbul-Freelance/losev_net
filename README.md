@@ -26,8 +26,8 @@ Uygulamayı tek bir port üzerinden (8080) çalıştırmak için:
 2.  Konteyneri çalıştırın (Veri kalıcılığı için yerel bir dizini bağlamayı unutmayın):
     ```bash
     docker run -p 8080:8080 \
-      -v $(pwd)/data:/app/backend/data \
-      -v $(pwd)/uploads:/app/backend/uploads \
+      -v $(pwd)/data:/app/data \
+      -v $(pwd)/uploads:/app/uploads \
       --name losev-inci-container \
       losev-inci
     ```
@@ -61,25 +61,20 @@ Uygulama çalıştıktan sonra `http://localhost:8080/api/docs` adresinden tüm 
 Sistemde üç temel rol bulunmaktadır:
 
 ### 1. Öğrenci Paneli
-Öğrenciler kayıt olduktan sonra (Admin onayı gerekir) sisteme giriş yapabilirler.
-- **Faaliyet Ekleme:** Yapılan gönüllülük çalışmalarını fotoğraf/belge ekleyerek kaydedebilirler.
+Öğrenciler kayıt olduktan sonra (Admin/Öğretmen onayı gerekir) sisteme giriş yapabilirler.
+- **Katılım Bildirimi:** Etkinlik kodu girerek faaliyetlere katılım bildirebilirler.
 - **Saat Takibi:** Onaylanmış toplam ve aylık gönüllülük saatlerini görebilirler.
-- **Rozet Sistemi:** Gönüllülük saatlerine göre (25, 50, 100, 200 saat) otomatik rozet kazanırlar.
+- **Sertifika Hedefi:** 30 saatlik gönüllülük hedefine giden süreci takip ederler.
 
 ### 2. Öğretmen Paneli
-Koordinatör öğretmenler, kendi okullarındaki öğrencilerin faaliyetlerini inceler.
-- **Faaliyet Onaylama:** Bekleyen faaliyetleri inceleyip onaylayabilir veya revizyon isteyebilirler.
-- **İstatistikler:** Okul bazlı aktiflik durumunu takip edebilirler.
+Koordinatör öğretmenler, kendi öğrencilerinin faaliyetlerini ve kayıtlarını yönetir.
+- **Katılım Onaylama:** Bekleyen katılımları inceleyip onaylayabilirler.
+- **Duyuru Paylaşma:** Öğrenciler için tek yönlü duyurular oluşturabilirler.
 
 ### 3. Genel Merkez (Admin) Paneli
 Tüm sistemin yönetiminden sorumludur.
 - **Kullanıcı Onayları:** Yeni kayıt olan öğrenci ve öğretmenlerin hesaplarını aktif hale getirirler.
-- **Geniş Çaplı Raporlama:** Türkiye geneli toplam saat ve şehir bazlı dağılımı analiz ederler.
-- **Sıralamalar:** En aktif 10 okul ve öğrenci listesine erişebilirler.
+- **Duyuru Yönetimi:** Tüm sistem geneli duyuru paylaşabilirler.
 
 **Admin Erişimi:**
 Admin hesapları güvenlik nedeniyle manuel olarak oluşturulur. Mevcut demo sistemde `admin@losev.org.tr` / `adminpassword` bilgileri ile giriş yapabilirsiniz.
-
-## Entegrasyon Rehberi
-
-Frontend ve Backend entegrasyonu hakkında detaylı bilgi için `INTEGRATION_GUIDE.md` dosyasına bakınız.
