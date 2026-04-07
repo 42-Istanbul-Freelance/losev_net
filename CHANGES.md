@@ -13,6 +13,7 @@ Bu dosya, projeyi LÖSEV gönüllülük takip sistemi MVP gereksinimlerine uygun
 ## 2. Sosyal Özelliklerin Kaldırılması
 - **Fotoğraf/Belge:** `Activity` varlığından `imageUrl` ve `documentUrl` alanları kaldırıldı. Frontend formlarından dosya yükleme bileşenleri temizlendi.
 - **Etkileşim:** Forum, yorum ve feed özellikleri sistemden tamamen arındırıldı.
+- **Sıralamalar ve Genel İstatistikler:** Rekabeti önlemek ve bireysel gelişime odaklanmak adına "Sıralamalar" (Rankings) ve "Genel İstatistikler" (Global Stats) kaldırıldı.
 
 ## 3. Tek Yönlü Duyuru Panosu
 - `Announcements` (Duyurular) modülü eklendi.
@@ -27,7 +28,7 @@ Bu dosya, projeyi LÖSEV gönüllülük takip sistemi MVP gereksinimlerine uygun
 ## 5. Frontend Güncellemeleri
 - **Öğrenci Paneli:** "Etkinlik Ekle" yerine "Etkinlik Listesi" ve "Katılım Bildir" akışı getirildi. Duyuru panosu eklendi.
 - **Öğretmen Paneli:** Etkinlik oluşturma ve duyuru paylaşma butonları eklendi. "Bekleyen Onaylar" ekranı hem yeni öğrencileri hem de etkinlik katılımlarını içerecek şekilde geliştirildi.
-- **Admin Paneli:** Genel istatistikler ve okul bazlı sıralamalar yeni veri modeline (katılımcı bazlı saat hesaplama) uygun hale getirildi.
+- **Admin Paneli:** Genel istatistikler ve okul bazlı sıralamalar kaldırıldı; kullanıcı onaylarına ve duyuru yönetimine odaklanıldı.
 
 ## 6. Veritabanı Modeli Değişiklikleri
 - `Activity`: `creatorId` eklendi, `studentId` kaldırıldı.
