@@ -77,16 +77,4 @@ export class ActivitiesController {
   async getMyStats(@Request() req) {
     return this.activitiesService.getStatsByStudent(req.user.id);
   }
-
-  @Get('stats/global')
-  @ApiOperation({ summary: 'Genel istatistikler (Public)' })
-  async getGlobalStats() {
-    return this.activitiesService.getGlobalStats();
-  }
-
-  @Get('stats/rankings')
-  @ApiOperation({ summary: 'Sıralamalar (En aktif öğrenciler/okullar)' })
-  async getRankings() {
-    return this.activitiesService.getRankings();
-  }
 }

@@ -14,13 +14,15 @@ The LÖSEV İnci Volunteer Tracking System is designed to record, verify, and re
 ## Database Schema & Roles
 
 ### User Roles
-- `STUDENT`: Can log activities, track hours, and view earned badges. Requires approval from Admin and assignment to a Teacher.
-- `TEACHER`: Manages a group of assigned students. Approves or requests revisions for student activities.
-- `ADMIN`: Manages user registrations (approval/rejection), assigns teachers to students, and views global impact reports.
+- `STUDENT`: Can participate in activities by code, track hours, and view 30h progress. Requires approval from Admin/Teacher and optionally assignment to a Teacher.
+- `TEACHER`: Manages a group of assigned students. Approves or rejects student activity participations and registrations.
+- `ADMIN`: Manages all user registrations, assigns teachers to students, and has global authority over all approvals and announcements.
 
 ### Key Entities
 - **User:** Stores profile information, role, status, and teacher-student relationships.
-- **Activity:** Stores date, type, hours, description, and status (Pending, Approved, Rejected, Revision Requested). Supports image and document uploads.
+- **Activity:** Stores date, type, hours, description, and attendance code.
+- **ActivityParticipant:** Tracks student participation in activities (status: Pending, Approved).
+- **Announcement:** One-way notifications for students, created by Admin/Teachers.
 
 ## API Integration
 
@@ -30,11 +32,10 @@ The system uses JWT-based authentication. Obtain a token via `POST /api/auth/log
 ### Core Endpoints
 - `POST /api/auth/register`: Register a new student or teacher.
 - `GET /api/users/profile`: Get the current user's profile.
-- `GET /api/users/pending` (Admin): List users awaiting approval.
-- `PATCH /api/users/:id/status` (Admin): Approve/reject users and optionally assign a `teacherId`.
-- `POST /api/activities`: Submit a new activity (Multipart/form-data for files).
-- `GET /api/activities/pending` (Teacher/Admin): List activities pending approval. Teachers only see their assigned students' activities.
-- `GET /api/activities/stats/global`: Global statistics for the Admin dashboard.
+- `GET /api/users/pending` (Admin/Teacher): List users awaiting approval.
+- `PATCH /api/users/:id/status` (Admin/Teacher): Approve/reject users and optionally assign a `teacherId`.
+- `POST /api/activities/join`: Submit a participation request using an activity code.
+- `GET /api/activities/pending-participants` (Teacher/Admin): List participations pending approval. Teachers only see their assigned students' participations.
 
 ## Development Setup
 
@@ -55,16 +56,13 @@ The system uses JWT-based authentication. Obtain a token via `POST /api/auth/log
 ### Docker Build
 ```bash
 docker build -t losev-inci .
-docker run -p 8080:8080 -v $(pwd)/data:/app/backend/data losev-inci
+docker run -p 8080:8080 -v $(pwd)/data:/app/data losev-inci
 ```
 
 ## UI/UX Standards
-- **Primary Color:** LÖSEV Red (#E30613)
+- **Primary Color:** LÖSEV Blue (#1E3A8A) - Light Theme
 - **Highlight Color:** LÖSEV Yellow (#FDC010)
 - **Language:** UI must be in Turkish. Code and comments must be in English.
 
-## Badge System (Hours Thresholds)
-- **25 Hours:** Bronze İnci
-- **50 Hours:** Silver İnci
-- **100 Hours:** Gold İnci
-- **200 Hours:** Platinum İnci Leader
+## 30-Hour Goal
+The system focuses strictly on the 30-hour volunteer milestone for the "İnci Certificate". All higher-tier rankings and badges have been removed to prioritize individual tracking.
