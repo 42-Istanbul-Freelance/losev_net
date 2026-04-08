@@ -3,7 +3,7 @@
     <!-- Top Header -->
     <header class="bg-white border-b h-16 flex items-center justify-between px-4 sticky top-0 z-10">
       <div class="flex items-center gap-2">
-        <img src="https://www.losev.org.tr/frontend/images/logo.png" alt="LÖSEV Logo" class="h-10" />
+        <img src="../assets/logo.svg" alt="LÖSEV Logo" class="h-10" />
         <span class="font-bold text-losev-blue hidden sm:block">İnci Takip Sistemi</span>
       </div>
       <div class="flex items-center gap-4">
@@ -16,7 +16,7 @@
     <!-- Sidebar (Desktop) -->
     <aside class="hidden sm:flex flex-col w-64 bg-white border-r fixed left-0 top-0 bottom-0 z-20">
       <div class="p-6">
-        <img src="https://www.losev.org.tr/frontend/images/logo.png" alt="LÖSEV Logo" class="h-12" />
+        <img src="../assets/logo.svg" alt="LÖSEV Logo" class="h-12" />
         <p class="mt-2 text-sm font-semibold text-losev-blue italic">Gönüllülük Takip Sistemi</p>
       </div>
       <nav class="flex-1 px-4 space-y-2">
@@ -85,8 +85,11 @@ const navItems = computed(() => {
     ]
   } else if (role.value === 'ADMIN') {
     return [
-      { path: '/admin/dashboard', label: 'Dashboard', icon: BarChart3 },
-      { path: '/admin/user-approvals', label: 'Onaylar', icon: CheckCircle },
+      { path: '/admin/dashboard', label: 'Özet', icon: LayoutDashboard },
+      { path: '/admin/activities', label: 'Etkinlikler', icon: History },
+      { path: '/admin/activity-create', label: 'Etkinlik Ekle', icon: PlusCircle },
+      { path: '/admin/approvals', label: 'Katılım Onayları', icon: CheckCircle },
+      { path: '/admin/user-approvals', label: 'Kullanıcı Onayları', icon: User },
     ]
   } else {
     return [

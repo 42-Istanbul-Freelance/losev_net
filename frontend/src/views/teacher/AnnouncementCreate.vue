@@ -52,6 +52,7 @@
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { api } from '../../services/api'
+import { useAuthStore } from '../../store/auth'
 import { ArrowLeft } from 'lucide-vue-next'
 
 const router = useRouter()
@@ -69,7 +70,12 @@ const handleSubmit = async () => {
 
   try {
     await api.post('/announcements', form)
-    router.push('/teacher/dashboard')
+    const authStore = useAuthStore()
+    if (authStore.userRole === 'ADMIN') {
+      router.push('/admin/dashboard')
+    } else {
+      router.push('/teacher/dashboard')
+    }
   } catch (err) {
     error.value = err.message || 'Duyuru yayınlanamadı.'
   } finally {

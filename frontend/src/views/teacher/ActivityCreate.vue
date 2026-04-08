@@ -100,6 +100,7 @@
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { api } from '../../services/api'
+import { useAuthStore } from '../../store/auth'
 import {
   ArrowLeft,
   Calendar,
@@ -113,7 +114,7 @@ const error = ref('')
 const form = reactive({
   date: new Date().toISOString().split('T')[0],
   type: '',
-  hours: null,
+  hours: 0,
   description: '',
   code: ''
 })
@@ -123,8 +124,17 @@ const handleSubmit = async () => {
   error.value = ''
 
   try {
-    await api.post('/activities', form)
-    router.push('/teacher/dashboard')
+    const payload = {
+      ...form,
+      hours: Number(form.hours)
+    }
+    await api.post('/activities', payload)
+    const authStore = useAuthStore()
+    if (authStore.userRole === 'ADMIN') {
+      router.push('/admin/dashboard')
+    } else {
+      router.push('/teacher/dashboard')
+    }
   } catch (err) {
     error.value = err.message || 'Etkinlik oluşturulamadı.'
   } finally {

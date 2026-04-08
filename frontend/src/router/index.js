@@ -80,6 +80,22 @@ const router = createRouter({
         {
           path: 'user-approvals',
           component: () => import('../views/admin/UserApprovals.vue')
+        },
+        {
+          path: 'activities',
+          component: () => import('../views/student/ActivityList.vue')
+        },
+        {
+          path: 'activity-create',
+          component: () => import('../views/teacher/ActivityCreate.vue')
+        },
+        {
+          path: 'announcement-create',
+          component: () => import('../views/teacher/AnnouncementCreate.vue')
+        },
+        {
+          path: 'approvals',
+          component: () => import('../views/teacher/Approvals.vue')
         }
       ]
     }
