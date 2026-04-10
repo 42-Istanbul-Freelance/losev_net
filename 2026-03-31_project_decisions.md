@@ -34,3 +34,8 @@ This document records the key architectural and functional decisions for the LÖ
 ## 7. Seed Data
 - The system automatically seeds the database if empty upon startup.
 - Seed data includes: 1 Admin, 1 Teacher, 3 Students (one pending), 2 past activities (approved), and 1 upcoming activity with a code.
+
+## 8. Admin Expansion and Bug Fixes (2026-04-10)
+- **Admin Capability:** Admins now have full access to create activities and announcements, and a dedicated view for approving all student participations globally.
+- **Logo Standardization:** Replaced external logo URLs with a standardized local asset `frontend/src/assets/logo.svg` to ensure consistent branding and offline reliability.
+- **Form Submission Stability:** Fixed a critical bug in activity creation where the `hours` field caused backend validation failures due to incorrect data typing. All numeric fields are now explicitly cast before submission.

@@ -69,7 +69,10 @@ const handleSubmit = async () => {
 
   try {
     await api.post('/announcements', form)
-    router.push('/teacher/dashboard')
+    const dashboardPath = router.currentRoute.value.path.startsWith('/admin')
+      ? '/admin/dashboard'
+      : '/teacher/dashboard'
+    router.push(dashboardPath)
   } catch (err) {
     error.value = err.message || 'Duyuru yayınlanamadı.'
   } finally {
