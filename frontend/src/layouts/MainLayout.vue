@@ -66,7 +66,8 @@ import {
   CheckCircle,
   BarChart3,
   Trophy,
-  LogOut
+  LogOut,
+  UserPlus
 } from 'lucide-vue-next'
 
 const router = useRouter()
@@ -88,7 +89,7 @@ const navItems = computed(() => {
       { path: '/admin/dashboard', label: 'Özet', icon: LayoutDashboard },
       { path: '/admin/activities', label: 'Etkinlikler', icon: History },
       { path: '/admin/activity-create', label: 'Etkinlik Ekle', icon: PlusCircle },
-      { path: '/admin/approvals', label: 'Katılım Onayları', icon: CheckCircle },
+      { path: '/admin/participation-approvals', label: 'Katılım Onayları', icon: CheckCircle },
       { path: '/admin/user-approvals', label: 'Kullanıcı Onayları', icon: User },
     ]
   } else {

@@ -94,8 +94,8 @@ const router = createRouter({
           component: () => import('../views/teacher/AnnouncementCreate.vue')
         },
         {
-          path: 'approvals',
-          component: () => import('../views/teacher/Approvals.vue')
+          path: 'participation-approvals',
+          component: () => import('../views/admin/ParticipationApprovals.vue')
         }
       ]
     }

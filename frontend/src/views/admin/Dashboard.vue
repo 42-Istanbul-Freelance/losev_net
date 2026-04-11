@@ -10,34 +10,42 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <!-- User Approvals CTA -->
-      <router-link to="/admin/user-approvals" class="bg-losev-yellow p-6 rounded-3xl shadow-lg shadow-losev-yellow/20 flex items-center justify-between group active:scale-[0.98] transition-all">
-        <div class="flex items-center gap-4">
-          <div class="bg-white/20 p-3 rounded-2xl text-white">
-            <UserPlus class="w-8 h-8" />
-          </div>
-          <div>
-            <h2 class="text-white font-bold text-lg">Kullanıcı Onayları</h2>
-            <p class="text-white/80 text-sm">Bekleyen {{ pendingUsersCount }} başvuru</p>
-          </div>
-        </div>
-        <ArrowRight class="w-6 h-6 text-white group-hover:translate-x-1 transition-transform" />
-      </router-link>
+    <!-- Approvals Summary -->
+    <div class="space-y-4">
+      <h2 class="font-bold text-gray-900 flex items-center gap-2">
+        <CheckCircle class="w-5 h-5 text-losev-blue" />
+        Onay Bekleyen İşlemler
+      </h2>
 
-      <!-- Participation Approvals CTA -->
-      <router-link to="/admin/approvals" class="bg-green-500 p-6 rounded-3xl shadow-lg shadow-green-500/20 flex items-center justify-between group active:scale-[0.98] transition-all">
-        <div class="flex items-center gap-4">
-          <div class="bg-white/20 p-3 rounded-2xl text-white">
-            <CheckCircle class="w-8 h-8" />
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- User Approvals CTA -->
+        <router-link to="/admin/user-approvals" class="bg-losev-yellow p-6 rounded-3xl shadow-lg shadow-losev-yellow/20 flex items-center justify-between group active:scale-[0.98] transition-all">
+          <div class="flex items-center gap-4">
+            <div class="bg-white/20 p-3 rounded-2xl text-white">
+              <UserPlus class="w-8 h-8" />
+            </div>
+            <div>
+              <h2 class="text-white font-bold text-lg">Kullanıcı Onayları</h2>
+              <p class="text-white/80 text-sm">Bekleyen {{ pendingUsersCount }} başvuru</p>
+            </div>
           </div>
-          <div>
-            <h2 class="text-white font-bold text-lg">Katılım Onayları</h2>
-            <p class="text-white/80 text-sm">Bekleyen {{ pendingParticipationsCount }} onay</p>
+          <ArrowRight class="w-6 h-6 text-white group-hover:translate-x-1 transition-transform" />
+        </router-link>
+
+        <!-- Participation Approvals CTA -->
+        <router-link to="/admin/participation-approvals" class="bg-green-500 p-6 rounded-3xl shadow-lg shadow-green-500/20 flex items-center justify-between group active:scale-[0.98] transition-all">
+          <div class="flex items-center gap-4">
+            <div class="bg-white/20 p-3 rounded-2xl text-white">
+              <ClipboardCheck class="w-8 h-8" />
+            </div>
+            <div>
+              <h2 class="text-white font-bold text-lg">Katılım Onayları</h2>
+              <p class="text-white/80 text-sm">Bekleyen {{ pendingParticipationsCount }} onay</p>
+            </div>
           </div>
-        </div>
-        <ArrowRight class="w-6 h-6 text-white group-hover:translate-x-1 transition-transform" />
-      </router-link>
+          <ArrowRight class="w-6 h-6 text-white group-hover:translate-x-1 transition-transform" />
+        </router-link>
+      </div>
     </div>
 
     <!-- Quick Actions -->
@@ -64,9 +72,10 @@ import {
   Globe,
   ArrowRight,
   UserPlus,
-  CheckCircle,
   PlusCircle,
-  Megaphone
+  Megaphone,
+  CheckCircle,
+  ClipboardCheck
 } from 'lucide-vue-next'
 
 const pendingUsersCount = ref(0)
@@ -75,12 +84,12 @@ const loading = ref(false)
 
 const fetchData = async () => {
   try {
-    const [pendingUsers, pendingParts] = await Promise.all([
+    const [users, participations] = await Promise.all([
       api.get('/users/pending'),
       api.get('/activities/pending-participants')
     ])
-    pendingUsersCount.value = pendingUsers.length
-    pendingParticipationsCount.value = pendingParts.length
+    pendingUsersCount.value = users.length
+    pendingParticipationsCount.value = participations.length
   } catch (err) {
     console.error('Failed to fetch dashboard data:', err)
   }
