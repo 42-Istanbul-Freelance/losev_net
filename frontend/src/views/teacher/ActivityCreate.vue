@@ -113,7 +113,7 @@ const error = ref('')
 const form = reactive({
   date: new Date().toISOString().split('T')[0],
   type: '',
-  hours: null,
+  hours: 0,
   description: '',
   code: ''
 })
@@ -123,8 +123,15 @@ const handleSubmit = async () => {
   error.value = ''
 
   try {
-    await api.post('/activities', form)
-    router.push('/teacher/dashboard')
+    const payload = {
+      ...form,
+      hours: Number(form.hours)
+    }
+    await api.post('/activities', payload)
+    const dashboardPath = router.currentRoute.value.path.startsWith('/admin')
+      ? '/admin/dashboard'
+      : '/teacher/dashboard'
+    router.push(dashboardPath)
   } catch (err) {
     error.value = err.message || 'Etkinlik oluşturulamadı.'
   } finally {
