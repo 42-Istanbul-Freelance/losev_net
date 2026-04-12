@@ -129,12 +129,10 @@ const handleSubmit = async () => {
       hours: Number(form.hours)
     }
     await api.post('/activities', payload)
-    const authStore = useAuthStore()
-    if (authStore.userRole === 'ADMIN') {
-      router.push('/admin/dashboard')
-    } else {
-      router.push('/teacher/dashboard')
-    }
+    const dashboardPath = router.currentRoute.value.path.startsWith('/admin')
+      ? '/admin/dashboard'
+      : '/teacher/dashboard'
+    router.push(dashboardPath)
   } catch (err) {
     error.value = err.message || 'Etkinlik oluşturulamadı.'
   } finally {
