@@ -52,6 +52,7 @@
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { api } from '../../services/api'
+import { useAuthStore } from '../../store/auth'
 import { ArrowLeft } from 'lucide-vue-next'
 
 const router = useRouter()
@@ -69,7 +70,10 @@ const handleSubmit = async () => {
 
   try {
     await api.post('/announcements', form)
-    router.push('/teacher/dashboard')
+    const dashboardPath = router.currentRoute.value.path.startsWith('/admin')
+      ? '/admin/dashboard'
+      : '/teacher/dashboard'
+    router.push(dashboardPath)
   } catch (err) {
     error.value = err.message || 'Duyuru yayınlanamadı.'
   } finally {
